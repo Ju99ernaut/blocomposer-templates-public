@@ -20,3 +20,5 @@ API_TAGS_METADATA = [
 ]
 
 GJS_PREFIX = "gjs-"
+
+NETLIFY_USERS_URL = ""

@@ -14,6 +14,10 @@
         "MAX_OVERFLOW": {
             "description": "Connection pool maximum overflow, max_connections = pool_size + max_overflow",
             "value": "2"
+        },
+        "WHITELIST_ORIGINS": {
+            "description": "Whitelist urls that can fetch data from server",
+            "value": ""
         }
     }
 }

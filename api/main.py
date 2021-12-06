@@ -1,3 +1,4 @@
+import os
 import uvicorn
 
 from fastapi import FastAPI
@@ -11,15 +12,23 @@ from constants import API_TAGS_METADATA
 
 config.parse_args()
 app = FastAPI(
-    title="Grapesjs API",
-    description="Simple API for grapesjs and grapesjs-template-manager",
+    title="Blocomposer API",
+    description="Public API for blocomposer templates",
     version="1.0.0",
     openapi_tags=API_TAGS_METADATA,
 )
 
+if os.getenv("WHITELIST_ORIGINS"):
+    allow_origins = os.getenv("WHITELIST_ORIGINS").split(",")
+else:
+    allow_origins = [
+        "http://localhost:8080/",
+        "http://localhost:8080",
+    ]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8080/", "http://localhost:8080"],
+    allow_origins=allow_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
