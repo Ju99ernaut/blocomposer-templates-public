@@ -1,6 +1,3 @@
-import dataset
-
-import config
 from constants import (
     TEMPLATES_TABLE,
     ASSETS_TABLE,
@@ -25,14 +22,6 @@ from utils.db import connect_db
     pages
     styles
     updated_at
-    
-    #################### assets #########################
-    
-    #################### blocks #########################
-    
-    #################### bookmarks ######################
-    
-    #################### comments #######################
 
 """
 
@@ -54,21 +43,186 @@ def add_template(db, template):
 
 
 @connect_db
-def remove_template(db, id):
+def remove_template(db, id, user):
     table = db[TEMPLATES_TABLE]
-    table.delete(id=str(id))
+    table.delete(id=str(id), user=user)
 
 
 @connect_db
-def get_template(db, id):
+def get_template(db, id, user):
     table = db[TEMPLATES_TABLE]
-    row = table.find_one(id=str(id))
+    row = table.find_one(id=str(id), user=user)
     if row is not None:
         return row
     return None
 
 
 @connect_db
-def get_all_templates(db):
+def get_all_templates(db, user, limit, start):
     table = db[TEMPLATES_TABLE]
-    return table.all()
+    return table.find(user=user, _limit=limit, _offset=limit * start)
+
+
+@connect_db
+def get_all_public_templates(db, limit, start):
+    table = db[TEMPLATES_TABLE]
+    return table.find(public=True, _limit=limit, _offset=limit * start)
+
+
+############### assets ########################
+@connect_db
+def add_asset(db, asset):
+    table = db[ASSETS_TABLE]
+    asset[ID_KEY] = str(asset[ID_KEY])
+    table.insert(asset)
+
+
+@connect_db
+def update_asset(db, asset):
+    table = db[ASSETS_TABLE]
+    asset[ID_KEY] = str(asset[ID_KEY])
+    table.update(
+        {"id": asset[ID_KEY], **{k: v for k, v in asset.items() if v is not None}},
+        [ID_KEY],
+    )
+
+
+@connect_db
+def remove_asset(db, id, user):
+    table = db[ASSETS_TABLE]
+    table.delete(id=str(id), user=user)
+
+
+@connect_db
+def get_asset(db, id, user):
+    table = db[ASSETS_TABLE]
+    row = table.find_one(id=str(id), user=user)
+    if row is not None:
+        return row
+    return None
+
+
+@connect_db
+def get_all_assets(db, user, limit, start):
+    table = db[ASSETS_TABLE]
+    return table.find(user=user, _limit=limit, _offset=limit * start)
+
+
+########################### bookmarks ##################################
+@connect_db
+def add_bookmark(db, bookmark):
+    table = db[BOOKMARKS_TABLE]
+    bookmark[ID_KEY] = str(bookmark[ID_KEY])
+    table.insert(bookmark)
+
+
+@connect_db
+def update_bookmark(db, bookmark):
+    table = db[BOOKMARKS_TABLE]
+    bookmark[ID_KEY] = str(bookmark[ID_KEY])
+    table.update(
+        {
+            "id": bookmark[ID_KEY],
+            **{k: v for k, v in bookmark.items() if v is not None},
+        },
+        [ID_KEY],
+    )
+
+
+@connect_db
+def remove_bookmark(db, id, user):
+    table = db[BOOKMARKS_TABLE]
+    table.delete(id=str(id), user=user)
+
+
+@connect_db
+def get_bookmark(db, id, user):
+    table = db[BOOKMARKS_TABLE]
+    row = table.find_one(id=str(id), user=user)
+    if row is not None:
+        return row
+    return None
+
+
+@connect_db
+def get_all_bookmarks(db, user, limit, start):
+    table = db[BOOKMARKS_TABLE]
+    return table.find(user=user, _limit=limit, _offset=limit * start)
+
+
+################################# blocks #################################
+@connect_db
+def add_block(db, block):
+    table = db[BLOCKS_TABLE]
+    block[ID_KEY] = str(block[ID_KEY])
+    table.insert(block)
+
+
+@connect_db
+def update_block(db, block):
+    table = db[BLOCKS_TABLE]
+    block[ID_KEY] = str(block[ID_KEY])
+    table.update(
+        {"id": block[ID_KEY], **{k: v for k, v in block.items() if v is not None}},
+        [ID_KEY],
+    )
+
+
+@connect_db
+def remove_block(db, id, user):
+    table = db[BLOCKS_TABLE]
+    table.delete(id=str(id), user=user)
+
+
+@connect_db
+def get_block(db, id, user):
+    table = db[BLOCKS_TABLE]
+    row = table.find_one(id=str(id), user=user)
+    if row is not None:
+        return row
+    return None
+
+
+@connect_db
+def get_all_blocks(db, user, limit, start):
+    table = db[BLOCKS_TABLE]
+    return table.find(user=user, _limit=limit, _offset=limit * start)
+
+
+################################## comments ###################################
+@connect_db
+def add_comment(db, comment):
+    table = db[COMMENTS_TABLE]
+    comment[ID_KEY] = str(comment[ID_KEY])
+    table.insert(comment)
+
+
+@connect_db
+def update_comment(db, comment):
+    table = db[COMMENTS_TABLE]
+    comment[ID_KEY] = str(comment[ID_KEY])
+    table.update(
+        {"id": comment[ID_KEY], **{k: v for k, v in comment.items() if v is not None}},
+        [ID_KEY],
+    )
+
+
+@connect_db
+def remove_comment(db, id, user):
+    table = db[COMMENTS_TABLE]
+    table.delete(id=str(id), user=user)
+
+
+@connect_db
+def get_comment(db, id, user):
+    table = db[COMMENTS_TABLE]
+    row = table.find_one(id=str(id), user=user)
+    if row is not None:
+        return row
+    return None
+
+
+@connect_db
+def get_all_comments(db, user, limit, start):
+    table = db[COMMENTS_TABLE]
+    return table.find(user=user, _limit=limit, _offset=limit * start)

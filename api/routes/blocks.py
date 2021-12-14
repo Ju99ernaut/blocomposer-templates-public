@@ -42,7 +42,7 @@ async def add_block(id: UUID, block: Block, user: User = Depends(get_user)):
 
 @router.patch("/{id}", response_model=Block)
 async def update_block(id: UUID, block: Block, user: User = Depends(get_user)):
-    data.add_block(block.dict())
+    data.update_block(block.dict())
     block = data.get_block(id, user["id"])
     if not block:
         raise HTTPException(status_code=404, detail="Block not found")

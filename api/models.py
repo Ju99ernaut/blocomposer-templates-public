@@ -31,7 +31,7 @@ class Template(BaseModel):
     assets: Optional[str] = Query("", alias=f"{GJS_PREFIX}assets")
     pages: Optional[str] = Query("", alias=f"{GJS_PREFIX}pages")
     styles: Optional[str] = Query("", alias=f"{GJS_PREFIX}styles")
-    updated_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = Field(default=datetime.now)
 
 
 class Asset(BaseModel):
@@ -40,7 +40,7 @@ class Asset(BaseModel):
     name: str
     url: str
     size: Optional[int] = 0
-    updated_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = Field(default=datetime.now)
 
 
 class Bookmark(BaseModel):
@@ -49,7 +49,7 @@ class Bookmark(BaseModel):
 
     user: Optional[str] = ""
     bookmarks: Union[List[str], str]
-    updated_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = Field(default=datetime.now)
 
     @validator("bookmarks")
     def stringify(cls, v):
@@ -62,7 +62,7 @@ class BookmarkRef(BaseModel):
     id: UUID = Field(default_factory=uuid4)
     user: Optional[str] = ""
     bookmarks: Union[List[str], str]
-    updated_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = Field(default=datetime.now)
 
     @validator("bookmarks")
     def listify(cls, v):
@@ -72,15 +72,15 @@ class BookmarkRef(BaseModel):
 
 
 class Comment(BaseModel):
-    comment: Optional[str] = None
+    comment: str
 
 
 class CommentRef(BaseModel):
     id: UUID = Field(default_factory=uuid4)
     user: Optional[str] = None
     template: UUID = Field(default_factory=uuid4)
-    comment: Optional[str] = None
-    updated_at: Optional[datetime] = None
+    comment: str
+    updated_at: Optional[datetime] = Field(default=datetime.now)
 
 
 class Block(BaseModel):
@@ -93,7 +93,7 @@ class Block(BaseModel):
     thumbnail: Optional[str] = ""
     user: Optional[str] = None
     template: UUID = Field(default_factory=uuid4)
-    updated_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = Field(default=datetime.now)
 
 
 class Message(BaseModel):

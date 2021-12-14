@@ -42,7 +42,7 @@ async def add_template(id: UUID, bookmark: Bookmark, user: User = Depends(get_us
 
 @router.patch("/{id}", response_model=BookmarkRef)
 async def update_template(id: UUID, bookmark: Bookmark, user: User = Depends(get_user)):
-    data.add_bookmark(bookmark.dict())
+    data.update_bookmark(bookmark.dict())
     bookmark = data.get_bookmark(id, user["id"])
     if not bookmark:
         raise HTTPException(status_code=404, detail="Bookmark not found")

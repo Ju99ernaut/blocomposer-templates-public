@@ -42,7 +42,7 @@ async def add_comment(id: UUID, comment: Comment, user: User = Depends(get_user)
 
 @router.patch("/{id}", response_model=CommentRef)
 async def update_comment(id: UUID, comment: Comment, user: User = Depends(get_user)):
-    data.add_comment(comment.dict())
+    data.update_comment(comment.dict())
     comment = data.get_comment(id, user["id"])
     if not comment:
         raise HTTPException(status_code=404, detail="Comment not found")

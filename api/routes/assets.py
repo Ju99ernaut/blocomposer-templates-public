@@ -39,7 +39,7 @@ async def add_asset(asset: Asset, user: User = Depends(get_user)):
 
 @router.patch("", response_model=Asset)
 async def update_asset(asset: Asset, user: User = Depends(get_user)):
-    data.add_item(asset.dict())
+    data.update_item(asset.dict())
     asset_db = data.get_asset(asset.id, user["id"])
     if not asset_db:
         raise HTTPException(status_code=404, detail="Item not found")
