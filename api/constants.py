@@ -14,9 +14,19 @@ PAGES_KEY = "pages"
 STYLES_KEY = "styles"
 URL_KEY = "url"
 UPDATED_KEY = "updated_at"
+USER_KEY = "user"
+SIZE_KEY = "size"
+PUBLIC_KEY = "public"
+BOOKMARKS_KEY = "bookmarks"
+COMMENT_KEY = "comment"
 
 API_TAGS_METADATA = [
-    {"name": "templates", "description": "Grapesjs templates"},
+    {"name": "user", "description": "User profile"},
+    {"name": "templates", "description": "Blocomposer user templates"},
+    {"name": "assets", "description": "Blocomposer user assets"},
+    {"name": "blocks", "description": "Blocomposer user blocks"},
+    {"name": "bookmarks", "description": "Blocomposer user bookmarks"},
+    {"name": "comments", "description": "Blocomposer user comments"},
 ]
 
 GJS_PREFIX = "gjs-"
