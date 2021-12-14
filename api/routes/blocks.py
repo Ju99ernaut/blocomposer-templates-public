@@ -1,10 +1,11 @@
 import data
 
-from typing import List
+from typing import List, Optional
 
 from uuid import UUID
-from fastapi import APIRouter, Depends, HTTPException
-from models import Block
+from fastapi import APIRouter, Depends, HTTPException, Query, Path, status
+from models import Block, User, Message
+from dependencies import get_user
 
 router = APIRouter(
     prefix="/blocks",
@@ -14,40 +15,46 @@ router = APIRouter(
 
 
 @router.get("", response_model=List[Block])
-async def read_blocks():
-    return [block for block in data.get_all_blocks()]
+async def read_blocks(
+    user: User = Depends(get_user),
+    page: Optional[int] = Query(0, minimum=0, description="Page number"),
+    size: Optional[int] = Query(50, maximum=100, description="Page size"),
+):
+    return [block for block in data.get_all_blocks(user["id"], page, size)]
 
 
 @router.get("/{id}", response_model=Block)
-async def read_block_with_id(id: UUID):
-    block = data.get_block(id)
+async def read_block_with_id(id: UUID, user: User = Depends(get_user)):
+    block = data.get_block(id, user["id"])
     if not block:
         raise HTTPException(status_code=404, detail="Block not found")
     return block
 
 
-@router.post("/{id}", response_model=Block)
-async def add_block(id: UUID, block: Block):
+@router.post("", response_model=Block)
+async def add_block(id: UUID, block: Block, user: User = Depends(get_user)):
     data.add_block(block.dict())
-    block = data.get_block(id)
+    block = data.get_block(id, user["id"])
     if not block:
         raise HTTPException(status_code=404, detail="Block not found")
     return block
 
 
 @router.patch("/{id}", response_model=Block)
-async def update_block(id: UUID, block: Block):
+async def update_block(id: UUID, block: Block, user: User = Depends(get_user)):
     data.add_block(block.dict())
-    block = data.get_block(id)
+    block = data.get_block(id, user["id"])
     if not block:
         raise HTTPException(status_code=404, detail="Block not found")
     return block
 
 
-@router.delete(
-    "/{id}",
-    response_model=List[Block],
-)
-async def delete_block_with_id(id: UUID):
-    data.remove_block(id)
-    return [block for block in data.get_all_blocks()]
+@router.delete("/{id}", response_model=Message)
+async def delete_block_with_id(id: UUID, user: User = Depends(get_user)):
+    data.remove_block(id, user["id"])
+    if data.remove_block(id, user["id"]):
+        raise HTTPException(
+            status_code=status.HTTP_417_EXPECTATION_FAILED,
+            detail="Failed to delete"
+        )
+    return {"msg": "success"}

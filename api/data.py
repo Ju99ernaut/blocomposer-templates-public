@@ -1,7 +1,14 @@
 import dataset
 
 import config
-from constants import TEMPLATES_TABLE, ID_KEY
+from constants import (
+    TEMPLATES_TABLE,
+    ASSETS_TABLE,
+    BLOCKS_TABLE,
+    BOOKMARKS_TABLE,
+    COMMENTS_TABLE,
+    ID_KEY,
+)
 
 from utils.db import connect_db
 
@@ -33,6 +40,10 @@ from utils.db import connect_db
 @connect_db
 def setup(db):
     db.create_table(TEMPLATES_TABLE, primary_id=ID_KEY, primary_type=db.types.string)
+    db.create_table(ASSETS_TABLE, primary_id=ID_KEY, primary_type=db.types.string)
+    db.create_table(BLOCKS_TABLE, primary_id=ID_KEY, primary_type=db.types.string)
+    db.create_table(BOOKMARKS_TABLE, primary_id=ID_KEY, primary_type=db.types.string)
+    db.create_table(COMMENTS_TABLE, primary_id=ID_KEY, primary_type=db.types.string)
 
 
 @connect_db

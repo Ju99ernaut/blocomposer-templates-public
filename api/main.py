@@ -3,7 +3,7 @@ import uvicorn
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routes import templates
+from routes import templates, assets, users, blocks, bookmarks, comments
 
 import config
 import data
@@ -34,7 +34,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(users.router)
 app.include_router(templates.router)
+app.include_router(assets.router)
+app.include_router(blocks.router)
+app.include_router(bookmarks.router)
+app.include_router(comments.router)
 
 
 @app.get("/")

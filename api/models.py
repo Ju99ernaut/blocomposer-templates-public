@@ -9,6 +9,14 @@ from constants import GJS_PREFIX
 
 class User(BaseModel):
     id: str
+    email: str
+    role: str
+    aud: str
+    url: str
+    confirmed_at: Union[datetime, str]
+    created_at: Union[datetime, str]
+    updated_at: Union[datetime, str]
+    invited_at: Union[datetime, str]
 
 
 class Template(BaseModel):
@@ -23,7 +31,6 @@ class Template(BaseModel):
     assets: Optional[str] = Query("", alias=f"{GJS_PREFIX}assets")
     pages: Optional[str] = Query("", alias=f"{GJS_PREFIX}pages")
     styles: Optional[str] = Query("", alias=f"{GJS_PREFIX}styles")
-    views: Optional[int] = 0
     updated_at: Optional[datetime] = None
 
 

@@ -1,6 +1,7 @@
 from uuid import UUID
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from models import User
+from dependencies import get_user
 
 router = APIRouter(
     prefix="/user",
@@ -10,5 +11,7 @@ router = APIRouter(
 
 
 @router.get("", response_model=User)
-async def read_user():
-    return {"id": "jdjbfiruhgjdnbv"}
+async def read_user(
+    user: User = Depends(get_user),
+):
+    return user

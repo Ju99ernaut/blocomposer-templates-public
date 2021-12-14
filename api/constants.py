@@ -3,6 +3,9 @@
 """
 TEMPLATES_TABLE = "templates"
 ASSETS_TABLE = "assets"
+BLOCKS_TABLE = "blocks"
+BOOKMARKS_TABLE = "bookmarks"
+COMMENTS_TABLE = "comments"
 
 ASSETS_KEY = "assets"
 ID_KEY = "id"
