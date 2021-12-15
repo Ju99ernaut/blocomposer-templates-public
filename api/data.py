@@ -4,7 +4,11 @@ from constants import (
     BLOCKS_TABLE,
     BOOKMARKS_TABLE,
     COMMENTS_TABLE,
+    USERS_TABLE,
+    USERS_TOKENS_TABLE,
     ID_KEY,
+    TOKEN_KEY,
+    USER_KEY,
 )
 
 from utils.db import connect_db
@@ -33,6 +37,7 @@ def setup(db):
     db.create_table(BLOCKS_TABLE, primary_id=ID_KEY, primary_type=db.types.string)
     db.create_table(BOOKMARKS_TABLE, primary_id=ID_KEY, primary_type=db.types.string)
     db.create_table(COMMENTS_TABLE, primary_id=ID_KEY, primary_type=db.types.string)
+    db.create_table(USERS_TABLE, primary_id=ID_KEY, primary_type=db.types.string)
 
 
 @connect_db
@@ -226,3 +231,37 @@ def get_comment(db, uuid, user):
 def get_all_comments(db, user, limit, start):
     table = db[COMMENTS_TABLE]
     return table.find(user=user, _limit=limit, _offset=limit * start)
+
+
+################################## users ###################################
+@connect_db
+def add_user(db, user):
+    table = db[USERS_TABLE]
+    table.upsert(user, [ID_KEY])
+
+
+@connect_db
+def get_user(db, user_id):
+    table = db[USERS_TABLE]
+    row = table.find_one(id=user_id)
+    if row is not None:
+        return row
+    return None
+
+
+@connect_db
+def add_user_token(db, token, user_id):
+    table = db[USERS_TOKENS_TABLE]
+    table.upsert(
+        {TOKEN_KEY: token, USER_KEY: user_id},
+        [USER_KEY],
+    )
+
+
+@connect_db
+def get_user_id(db, token):
+    table = db[USERS_TOKENS_TABLE]
+    row = table.find_one(token=token)
+    if row is not None:
+        return row[USER_KEY]
+    return None

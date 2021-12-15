@@ -6,6 +6,8 @@ ASSETS_TABLE = "assets"
 BLOCKS_TABLE = "blocks"
 BOOKMARKS_TABLE = "bookmarks"
 COMMENTS_TABLE = "comments"
+USERS_TABLE = "users"
+USERS_TOKENS_TABLE = "users_tokens"
 
 ASSETS_KEY = "assets"
 ID_KEY = "id"
@@ -22,6 +24,7 @@ SIZE_KEY = "size"
 PUBLIC_KEY = "public"
 BOOKMARKS_KEY = "bookmarks"
 COMMENT_KEY = "comment"
+TOKEN_KEY = "token"
 
 API_TAGS_METADATA = [
     {"name": "user", "description": "User profile"},
