@@ -2,7 +2,7 @@ import data
 
 from uuid import UUID
 from typing import List, Optional
-from fastapi import APIRouter, Depends, HTTPException, Query, Path, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from models import Asset, User, Message
 from dependencies import get_user
 
@@ -20,9 +20,9 @@ async def read_assets(
     return [asset for asset in data.get_all_assets(user["id"], page, size)]
 
 
-@router.get("/{id}", response_model=Asset)
-async def read_asset(id: UUID, user: User = Depends(get_user)):
-    asset = data.get_asset(id, user["id"])
+@router.get("/{uuid}", response_model=Asset)
+async def read_asset(uuid: UUID, user: User = Depends(get_user)):
+    asset = data.get_asset(uuid, user["id"])
     if not asset:
         raise HTTPException(status_code=404, detail="Item not found")
     return asset
@@ -30,7 +30,7 @@ async def read_asset(id: UUID, user: User = Depends(get_user)):
 
 @router.post("", response_model=Asset)
 async def add_asset(asset: Asset, user: User = Depends(get_user)):
-    data.add_item(asset.dict())
+    data.add_asset(asset.dict())
     asset_db = data.get_asset(asset.id, user["id"])
     if not asset_db:
         raise HTTPException(status_code=404, detail="Item not found")
@@ -39,7 +39,7 @@ async def add_asset(asset: Asset, user: User = Depends(get_user)):
 
 @router.patch("", response_model=Asset)
 async def update_asset(asset: Asset, user: User = Depends(get_user)):
-    data.update_item(asset.dict())
+    data.update_asset(asset.dict())
     asset_db = data.get_asset(asset.id, user["id"])
     if not asset_db:
         raise HTTPException(status_code=404, detail="Item not found")
@@ -47,11 +47,10 @@ async def update_asset(asset: Asset, user: User = Depends(get_user)):
 
 
 @router.delete("", response_model=Message)
-async def delete_asset(id: UUID, user: User = Depends(get_user)):
-    data.remove_asset(id, user["id"])
-    if data.remove_asset(id, user["id"]):
+async def delete_asset(uuid: UUID, user: User = Depends(get_user)):
+    data.remove_asset(uuid, user["id"])
+    if data.get_asset(uuid, user["id"]):
         raise HTTPException(
-            status_code=status.HTTP_417_EXPECTATION_FAILED,
-            detail="Failed to delete"
+            status_code=status.HTTP_417_EXPECTATION_FAILED, detail="Failed to delete"
         )
     return {"msg": "success"}

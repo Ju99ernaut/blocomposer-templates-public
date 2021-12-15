@@ -3,7 +3,7 @@ import data
 from typing import List, Optional
 
 from uuid import UUID
-from fastapi import APIRouter, Depends, HTTPException, Query, Path, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from models import Template, User, Message
 from utils.tasks import prefix
 from dependencies import get_user
@@ -34,27 +34,27 @@ async def read_puplic_templates(
     return [prefix(template) for template in data.get_all_public_templates(page, size)]
 
 
-@router.get("/{id}", response_model=Template)
-async def read_template_with_id(id: UUID, user: User = Depends(get_user)):
-    template = data.get_template(id, user["id"])
+@router.get("/{uuid}", response_model=Template)
+async def read_template_with_id(uuid: UUID, user: User = Depends(get_user)):
+    template = data.get_template(uuid, user["id"])
     if not template:
         raise HTTPException(status_code=404, detail="Template not found")
     return prefix(template)
 
 
-@router.post("/{id}", response_model=Template)
-async def add_template(id: UUID, template: Template, user: User = Depends(get_user)):
+@router.post("/{uuid}", response_model=Template)
+async def add_template(uuid: UUID, template: Template, user: User = Depends(get_user)):
     data.add_template(template.dict())
-    template = data.get_template(id, user["id"])
+    template = data.get_template(uuid, user["id"])
     if not template:
         raise HTTPException(status_code=404, detail="Template not found")
     return prefix(template)
 
 
-@router.delete("/{id}", response_model=Message)
-async def delete_template_with_id(id: UUID, user: User = Depends(get_user)):
-    data.remove_template(id, user["id"])
-    if data.remove_template(id, user["id"]):
+@router.delete("/{uuid}", response_model=Message)
+async def delete_template_with_id(uuid: UUID, user: User = Depends(get_user)):
+    data.remove_template(uuid, user["id"])
+    if data.get_template(uuid, user["id"]):
         raise HTTPException(
             status_code=status.HTTP_417_EXPECTATION_FAILED,
             detail="Failed to delete"

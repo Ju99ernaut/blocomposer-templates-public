@@ -43,15 +43,15 @@ def add_template(db, template):
 
 
 @connect_db
-def remove_template(db, id, user):
+def remove_template(db, uuid, user):
     table = db[TEMPLATES_TABLE]
-    table.delete(id=str(id), user=user)
+    table.delete(id=str(uuid), user=user)
 
 
 @connect_db
-def get_template(db, id, user):
+def get_template(db, uuid, user):
     table = db[TEMPLATES_TABLE]
-    row = table.find_one(id=str(id), user=user)
+    row = table.find_one(id=str(uuid), user=user)
     if row is not None:
         return row
     return None
@@ -88,15 +88,15 @@ def update_asset(db, asset):
 
 
 @connect_db
-def remove_asset(db, id, user):
+def remove_asset(db, uuid, user):
     table = db[ASSETS_TABLE]
-    table.delete(id=str(id), user=user)
+    table.delete(id=str(uuid), user=user)
 
 
 @connect_db
-def get_asset(db, id, user):
+def get_asset(db, uuid, user):
     table = db[ASSETS_TABLE]
-    row = table.find_one(id=str(id), user=user)
+    row = table.find_one(id=str(uuid), user=user)
     if row is not None:
         return row
     return None
@@ -130,15 +130,15 @@ def update_bookmark(db, bookmark):
 
 
 @connect_db
-def remove_bookmark(db, id, user):
+def remove_bookmark(db, uuid, user):
     table = db[BOOKMARKS_TABLE]
-    table.delete(id=str(id), user=user)
+    table.delete(id=str(uuid), user=user)
 
 
 @connect_db
-def get_bookmark(db, id, user):
+def get_bookmark(db, uuid, user):
     table = db[BOOKMARKS_TABLE]
-    row = table.find_one(id=str(id), user=user)
+    row = table.find_one(id=str(uuid), user=user)
     if row is not None:
         return row
     return None
@@ -169,15 +169,15 @@ def update_block(db, block):
 
 
 @connect_db
-def remove_block(db, id, user):
+def remove_block(db, uuid, user):
     table = db[BLOCKS_TABLE]
-    table.delete(id=str(id), user=user)
+    table.delete(id=str(uuid), user=user)
 
 
 @connect_db
-def get_block(db, id, user):
+def get_block(db, uuid, user):
     table = db[BLOCKS_TABLE]
-    row = table.find_one(id=str(id), user=user)
+    row = table.find_one(id=str(uuid), user=user)
     if row is not None:
         return row
     return None
@@ -208,15 +208,15 @@ def update_comment(db, comment):
 
 
 @connect_db
-def remove_comment(db, id, user):
+def remove_comment(db, uuid, user):
     table = db[COMMENTS_TABLE]
-    table.delete(id=str(id), user=user)
+    table.delete(id=str(uuid), user=user)
 
 
 @connect_db
-def get_comment(db, id, user):
+def get_comment(db, uuid, user):
     table = db[COMMENTS_TABLE]
-    row = table.find_one(id=str(id), user=user)
+    row = table.find_one(id=str(uuid), user=user)
     if row is not None:
         return row
     return None
