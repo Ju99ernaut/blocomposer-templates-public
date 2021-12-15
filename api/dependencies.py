@@ -1,11 +1,11 @@
+import os
 import requests
 
 from fastapi import Header, HTTPException, status
-from constants import NETLIFY_USERS_URL
 
 
-def get_user(authorization: str = Header(...)):
-    url = NETLIFY_USERS_URL
+def get_user(authorization: str = Header(..., description="e.g. Basic token")):
+    url = os.getenv("NETLIFY_IDENTITY_ENDPOINT") + "/user"
     headers = {"authorization": authorization}
     result = requests.get(url, headers=headers)
     if result.status_code != 200:

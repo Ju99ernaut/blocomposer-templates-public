@@ -16,7 +16,11 @@
             "value": "2"
         },
         "WHITELIST_ORIGINS": {
-            "description": "Whitelist urls that can fetch data from server",
+            "description": "Whitelist urls that can fetch data from server(comma separeted)",
+            "value": ""
+        },
+        "NETLIFY_IDENTITY_ENDPOINT": {
+            "description": "Netlify identity API endpoint",
             "value": ""
         }
     }
