@@ -23,5 +23,10 @@ def get_user(authorization: str = Header(..., description="e.g. Basic token")):
     user = result.json()
     data.add_user(user)
     data.add_user_token(authorization, user["id"])
+    data.add_author(
+        user["id"],
+        user["user_metadata"]["full_name"],
+        user["user_metadata"]["avatar_url"],
+    )
 
     return user
