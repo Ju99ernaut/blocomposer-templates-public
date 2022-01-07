@@ -1,7 +1,7 @@
 import os
 import uvicorn
 
-from fastapi import FastAPI
+from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from routes import templates, assets, users, blocks, bookmarks, comments
 
@@ -47,6 +47,14 @@ async def root():
     return {
         "docs": "api documentation at /docs or /redoc",
     }
+
+
+@app.websocket("/live")
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    while True:
+        data = await websocket.receive_json()
+        await websocket.send_json(data)
 
 
 if __name__ == "__main__":
