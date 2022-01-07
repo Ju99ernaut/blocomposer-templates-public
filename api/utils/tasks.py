@@ -1,6 +1,7 @@
 # tasks.py from https://github.com/dmontagu/fastapi-utils
 import asyncio
 import logging
+import data
 from asyncio import ensure_future
 from functools import wraps
 from traceback import format_exception
@@ -8,7 +9,7 @@ from typing import Any, Callable, Coroutine, Optional, Union
 
 from starlette.concurrency import run_in_threadpool
 
-from constants import GJS_PREFIX
+from constants import GJS_PREFIX, AUTHOR_KEY
 
 NoArgsNoReturnFuncT = Callable[[], None]
 NoArgsNoReturnAsyncFuncT = Callable[[], Coroutine[Any, Any, None]]
@@ -23,7 +24,7 @@ def repeat_every(
     wait_first: bool = False,
     logger: Optional[logging.Logger] = None,
     raise_exceptions: bool = False,
-    max_repetitions: Optional[int] = None
+    max_repetitions: Optional[int] = None,
 ) -> NoArgsNoReturnDecorator:
     """
     Returns decorator that modifies a function to be run periodically after it's first call
@@ -92,7 +93,7 @@ def prefix(dictionary):
     dictionary: Dict
         Dictionary object to filter
     """
-    
+
     return {
         **dictionary,
         **{
@@ -106,3 +107,19 @@ def prefix(dictionary):
             or k == "styles"
         },
     }
+
+
+def add_author(dictionary, author):
+    """
+    Add author were there is author_id
+
+    Parameters
+    ----------
+    dictionary: Dict
+        Dictionary object to filter
+    author: Dict
+        Add given author instead of querying
+    """
+
+    dictionary[AUTHOR_KEY] = author or data.get_author(dictionary[AUTHOR_KEY])
+    return dictionary

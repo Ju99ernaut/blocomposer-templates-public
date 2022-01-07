@@ -54,7 +54,6 @@ async def delete_block_with_id(uuid: UUID, user: User = Depends(get_user)):
     data.remove_block(uuid, user["id"])
     if data.get_block(uuid, user["id"]):
         raise HTTPException(
-            status_code=status.HTTP_417_EXPECTATION_FAILED,
-            detail="Failed to delete"
+            status_code=status.HTTP_417_EXPECTATION_FAILED, detail="Failed to delete"
         )
     return {"msg": "success"}

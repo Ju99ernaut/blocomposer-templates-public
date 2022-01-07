@@ -6,6 +6,7 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from models import Comment, CommentRef, User, Message
 from dependencies import get_user
+from utils.tasks import add_author
 
 router = APIRouter(
     prefix="/comments",
@@ -20,7 +21,10 @@ async def get_comments(
     page: Optional[int] = Query(0, minimum=0, description="Page number"),
     size: Optional[int] = Query(50, maximum=100, description="Page size"),
 ):
-    return [bookmark for bookmark in data.get_all_comments(template, page, size)]
+    return [
+        add_author(comment)
+        for comment in data.get_all_template_comments(template, page, size)
+    ]
 
 
 @router.get("/{uuid}", response_model=CommentRef)
@@ -28,7 +32,7 @@ async def read_comment_with_id(uuid: UUID, user: User = Depends(get_user)):
     comment = data.get_comment(uuid, user["id"])
     if not comment:
         raise HTTPException(status_code=404, detail="Comment not found")
-    return comment
+    return add_author(comment)
 
 
 @router.post("", response_model=CommentRef)
@@ -37,7 +41,7 @@ async def add_comment(uuid: UUID, comment: Comment, user: User = Depends(get_use
     comment = data.get_comment(uuid, user["id"])
     if not comment:
         raise HTTPException(status_code=404, detail="Comment not found")
-    return comment
+    return add_author(comment)
 
 
 @router.patch("/{uuid}", response_model=CommentRef)
@@ -46,7 +50,7 @@ async def update_comment(uuid: UUID, comment: Comment, user: User = Depends(get_
     comment = data.get_comment(uuid, user["id"])
     if not comment:
         raise HTTPException(status_code=404, detail="Comment not found")
-    return comment
+    return add_author(comment)
 
 
 @router.delete("/{uuid}", response_model=Message)
