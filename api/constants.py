@@ -8,6 +8,7 @@ BOOKMARKS_TABLE = "bookmarks"
 COMMENTS_TABLE = "comments"
 USERS_TABLE = "users"
 USERS_TOKENS_TABLE = "users_tokens"
+AUTHORS_TABLE = "authors"
 
 ASSETS_KEY = "assets"
 ID_KEY = "id"
@@ -20,11 +21,14 @@ STYLES_KEY = "styles"
 URL_KEY = "url"
 UPDATED_KEY = "updated_at"
 USER_KEY = "user"
+AUTHOR_KEY = "author"
 SIZE_KEY = "size"
 PUBLIC_KEY = "public"
 BOOKMARKS_KEY = "bookmarks"
 COMMENT_KEY = "comment"
 TOKEN_KEY = "token"
+FULL_NAME_KEY = "full_name"
+AVATAR_URL_KEY = "avatar_url"
 
 API_TAGS_METADATA = [
     {"name": "user", "description": "User profile"},

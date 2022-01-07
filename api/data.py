@@ -6,9 +6,12 @@ from constants import (
     COMMENTS_TABLE,
     USERS_TABLE,
     USERS_TOKENS_TABLE,
+    AUTHORS_TABLE,
     ID_KEY,
     TOKEN_KEY,
     USER_KEY,
+    FULL_NAME_KEY,
+    AVATAR_URL_KEY,
 )
 
 from utils.db import connect_db
@@ -38,6 +41,7 @@ def setup(db):
     db.create_table(BOOKMARKS_TABLE, primary_id=ID_KEY, primary_type=db.types.string)
     db.create_table(COMMENTS_TABLE, primary_id=ID_KEY, primary_type=db.types.string)
     db.create_table(USERS_TABLE, primary_id=ID_KEY, primary_type=db.types.string)
+    db.create_table(AUTHORS_TABLE, primary_id=ID_KEY, primary_type=db.types.string)
 
 
 @connect_db
@@ -54,9 +58,9 @@ def remove_template(db, uuid, user):
 
 
 @connect_db
-def get_template(db, uuid, user):
+def get_template(db, uuid):
     table = db[TEMPLATES_TABLE]
-    row = table.find_one(id=str(uuid), user=user)
+    row = table.find_one(id=str(uuid))
     if row is not None:
         return row
     return None
@@ -228,6 +232,12 @@ def get_comment(db, uuid, user):
 
 
 @connect_db
+def get_all_template_comments(db, template, limit, start):
+    table = db[COMMENTS_TABLE]
+    return table.find(template=str(template), _limit=limit, _offset=limit * start)
+
+
+@connect_db
 def get_all_comments(db, user, limit, start):
     table = db[COMMENTS_TABLE]
     return table.find(user=user, _limit=limit, _offset=limit * start)
@@ -264,4 +274,22 @@ def get_user_id(db, token):
     row = table.find_one(token=token)
     if row is not None:
         return row[USER_KEY]
+    return None
+
+
+@connect_db
+def add_author(db, user_id, full_name, avatar_url):
+    table = db[AUTHORS_TABLE]
+    table.upsert(
+        {ID_KEY: user_id, FULL_NAME_KEY: full_name, AVATAR_URL_KEY: avatar_url},
+        [ID_KEY],
+    )
+
+
+@connect_db
+def get_author(db, user_id):
+    table = db[AUTHORS_TABLE]
+    row = table.find_one(id=user_id)
+    if row is not None:
+        return row
     return None
