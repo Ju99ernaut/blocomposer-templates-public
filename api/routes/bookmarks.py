@@ -6,7 +6,7 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from models import Bookmark, BookmarkRef, User, Message
 from dependencies import get_user
-from utils.tasks import  add_author
+from utils.tasks import add_author
 
 router = APIRouter(
     prefix="/bookmarks",
@@ -22,11 +22,14 @@ async def read_bookmarks(
     size: Optional[int] = Query(50, maximum=100, description="Page size"),
 ):
     author = data.get_author(user["id"])
-    return [add_author(bookmark, author) for bookmark in data.get_all_bookmarks(user["id"], page, size)]
+    return [
+        add_author(bookmark, author)
+        for bookmark in data.get_all_bookmarks(user["id"], page, size)
+    ]
 
 
 @router.get("/{uuid}", response_model=BookmarkRef)
-async def read_template_with_id(uuid: UUID, user: User = Depends(get_user)):
+async def read_bookmark_with_id(uuid: UUID, user: User = Depends(get_user)):
     bookmark = data.get_bookmark(uuid, user["id"])
     if not bookmark:
         raise HTTPException(status_code=404, detail="Bookmark not found")
@@ -34,7 +37,8 @@ async def read_template_with_id(uuid: UUID, user: User = Depends(get_user)):
 
 
 @router.post("", response_model=BookmarkRef)
-async def add_template(uuid: UUID, bookmark: Bookmark, user: User = Depends(get_user)):
+async def add_bookmark(bookmark: Bookmark, user: User = Depends(get_user)):
+    bookmark.author = user["id"]
     data.add_bookmark(bookmark.dict())
     bookmark = data.get_bookmark(uuid, user["id"])
     if not bookmark:
@@ -43,9 +47,10 @@ async def add_template(uuid: UUID, bookmark: Bookmark, user: User = Depends(get_
 
 
 @router.patch("/{uuid}", response_model=BookmarkRef)
-async def update_template(
+async def update_bookmarks(
     uuid: UUID, bookmark: Bookmark, user: User = Depends(get_user)
 ):
+    bookmark.id = uuid
     data.update_bookmark(bookmark.dict())
     bookmark = data.get_bookmark(uuid, user["id"])
     if not bookmark:

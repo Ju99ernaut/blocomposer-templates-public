@@ -32,6 +32,7 @@ async def read_asset(uuid: UUID, user: User = Depends(get_user)):
 
 @router.post("", response_model=Asset)
 async def add_asset(asset: Asset, user: User = Depends(get_user)):
+    asset.author = user["id"]
     data.add_asset(asset.dict())
     asset_db = data.get_asset(asset.id, user["id"])
     if not asset_db:
@@ -39,8 +40,9 @@ async def add_asset(asset: Asset, user: User = Depends(get_user)):
     return add_author(asset_db)
 
 
-@router.patch("", response_model=Asset)
-async def update_asset(asset: Asset, user: User = Depends(get_user)):
+@router.patch("/{uuid}", response_model=Asset)
+async def update_asset(uuid: UUID, asset: Asset, user: User = Depends(get_user)):
+    asset.id = uuid
     data.update_asset(asset.dict())
     asset_db = data.get_asset(asset.id, user["id"])
     if not asset_db:
@@ -48,7 +50,7 @@ async def update_asset(asset: Asset, user: User = Depends(get_user)):
     return add_author(asset_db)
 
 
-@router.delete("", response_model=Message)
+@router.delete("/{uuid}", response_model=Message)
 async def delete_asset(uuid: UUID, user: User = Depends(get_user)):
     data.remove_asset(uuid, user["id"])
     if data.get_asset(uuid, user["id"]):

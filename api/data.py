@@ -48,13 +48,19 @@ def setup(db):
 def add_template(db, template):
     table = db[TEMPLATES_TABLE]
     template[ID_KEY] = str(template[ID_KEY])
-    table.upsert(template, [ID_KEY])
+    table.upsert(
+        {
+            "id": template[ID_KEY],
+            **{k: v for k, v in template.items() if v is not None},
+        },
+        [ID_KEY],
+    )
 
 
 @connect_db
-def remove_template(db, uuid, user):
+def remove_template(db, uuid, author):
     table = db[TEMPLATES_TABLE]
-    table.delete(id=str(uuid), user=user)
+    table.delete(id=str(uuid), author=author)
 
 
 @connect_db
@@ -67,9 +73,9 @@ def get_template(db, uuid):
 
 
 @connect_db
-def get_all_templates(db, user, limit, start):
+def get_all_templates(db, author, limit, start):
     table = db[TEMPLATES_TABLE]
-    return table.find(user=user, _limit=limit, _offset=limit * start)
+    return table.find(author=author, _limit=limit, _offset=limit * start)
 
 
 @connect_db
@@ -97,24 +103,24 @@ def update_asset(db, asset):
 
 
 @connect_db
-def remove_asset(db, uuid, user):
+def remove_asset(db, uuid, author):
     table = db[ASSETS_TABLE]
-    table.delete(id=str(uuid), user=user)
+    table.delete(id=str(uuid), author=author)
 
 
 @connect_db
-def get_asset(db, uuid, user):
+def get_asset(db, uuid, author):
     table = db[ASSETS_TABLE]
-    row = table.find_one(id=str(uuid), user=user)
+    row = table.find_one(id=str(uuid), author=author)
     if row is not None:
         return row
     return None
 
 
 @connect_db
-def get_all_assets(db, user, limit, start):
+def get_all_assets(db, author, limit, start):
     table = db[ASSETS_TABLE]
-    return table.find(user=user, _limit=limit, _offset=limit * start)
+    return table.find(author=author, _limit=limit, _offset=limit * start)
 
 
 ########################### bookmarks ##################################
@@ -139,24 +145,24 @@ def update_bookmark(db, bookmark):
 
 
 @connect_db
-def remove_bookmark(db, uuid, user):
+def remove_bookmark(db, uuid, author):
     table = db[BOOKMARKS_TABLE]
-    table.delete(id=str(uuid), user=user)
+    table.delete(id=str(uuid), author=author)
 
 
 @connect_db
-def get_bookmark(db, uuid, user):
+def get_bookmark(db, uuid, author):
     table = db[BOOKMARKS_TABLE]
-    row = table.find_one(id=str(uuid), user=user)
+    row = table.find_one(id=str(uuid), author=author)
     if row is not None:
         return row
     return None
 
 
 @connect_db
-def get_all_bookmarks(db, user, limit, start):
+def get_all_bookmarks(db, author, limit, start):
     table = db[BOOKMARKS_TABLE]
-    return table.find(user=user, _limit=limit, _offset=limit * start)
+    return table.find(author=author, _limit=limit, _offset=limit * start)
 
 
 ################################# blocks #################################
@@ -178,24 +184,24 @@ def update_block(db, block):
 
 
 @connect_db
-def remove_block(db, uuid, user):
+def remove_block(db, uuid, author):
     table = db[BLOCKS_TABLE]
-    table.delete(id=str(uuid), user=user)
+    table.delete(id=str(uuid), author=author)
 
 
 @connect_db
-def get_block(db, uuid, user):
+def get_block(db, uuid, author):
     table = db[BLOCKS_TABLE]
-    row = table.find_one(id=str(uuid), user=user)
+    row = table.find_one(id=str(uuid), author=author)
     if row is not None:
         return row
     return None
 
 
 @connect_db
-def get_all_blocks(db, user, limit, start):
+def get_all_blocks(db, author, limit, start):
     table = db[BLOCKS_TABLE]
-    return table.find(user=user, _limit=limit, _offset=limit * start)
+    return table.find(author=author, _limit=limit, _offset=limit * start)
 
 
 ################################## comments ###################################
@@ -217,15 +223,15 @@ def update_comment(db, comment):
 
 
 @connect_db
-def remove_comment(db, uuid, user):
+def remove_comment(db, uuid, author):
     table = db[COMMENTS_TABLE]
-    table.delete(id=str(uuid), user=user)
+    table.delete(id=str(uuid), author=author)
 
 
 @connect_db
-def get_comment(db, uuid, user):
+def get_comment(db, uuid, author):
     table = db[COMMENTS_TABLE]
-    row = table.find_one(id=str(uuid), user=user)
+    row = table.find_one(id=str(uuid), author=author)
     if row is not None:
         return row
     return None
@@ -238,9 +244,9 @@ def get_all_template_comments(db, template, limit, start):
 
 
 @connect_db
-def get_all_comments(db, user, limit, start):
+def get_all_comments(db, author, limit, start):
     table = db[COMMENTS_TABLE]
-    return table.find(user=user, _limit=limit, _offset=limit * start)
+    return table.find(author=author, _limit=limit, _offset=limit * start)
 
 
 ################################## users ###################################

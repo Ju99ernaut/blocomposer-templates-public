@@ -49,6 +49,7 @@ async def read_template_with_id(uuid: UUID):
 
 @router.post("/{uuid}", response_model=Template)
 async def add_template(uuid: UUID, template: Template, user: User = Depends(get_user)):
+    template.author = user["id"]
     data.add_template(template.dict())
     template = data.get_template(uuid, user["id"])
     if not template:

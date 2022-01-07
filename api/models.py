@@ -26,7 +26,7 @@ class Author(BaseModel):
 
 class Template(BaseModel):
     id: UUID = Field(default_factory=uuid4)
-    author: Union[Author, str]
+    author: Optional[Union[Author, str]] = None
     name: Optional[str] = ""
     category: Optional[str] = "default"
     thumbnail: Optional[str] = ""
@@ -42,7 +42,7 @@ class Template(BaseModel):
 
 class Asset(BaseModel):
     id: UUID = Field(default_factory=uuid4)
-    author: Union[Author, str]
+    author: Optional[Union[Author, str]] = None
     name: str
     url: str
     size: Optional[int] = 0
@@ -53,7 +53,8 @@ class Bookmark(BaseModel):
     def __getitem__(self, item):
         return getattr(self, item)
 
-    author: str
+    id: UUID = Field(default_factory=uuid4)
+    author: Optional[str] = None
     bookmarks: Union[List[str], str]
     updated_at: Optional[datetime] = Field(default_factory=datetime.now)
 
@@ -66,7 +67,7 @@ class Bookmark(BaseModel):
 
 class BookmarkRef(BaseModel):
     id: UUID = Field(default_factory=uuid4)
-    author: Author
+    author: Optional[Union[Author, str]] = None
     bookmarks: Union[List[str], str]
     updated_at: Optional[datetime] = Field(default_factory=datetime.now)
 
@@ -78,12 +79,8 @@ class BookmarkRef(BaseModel):
 
 
 class Comment(BaseModel):
-    comment: str
-
-
-class CommentRef(BaseModel):
     id: UUID = Field(default_factory=uuid4)
-    author: Union[Author, str]
+    author: Optional[Union[Author, str]] = None
     template: UUID = Field(default_factory=uuid4)
     comment: str
     updated_at: Optional[datetime] = Field(default_factory=datetime.now)
@@ -91,13 +88,13 @@ class CommentRef(BaseModel):
 
 class Block(BaseModel):
     id: UUID = Field(default_factory=uuid4)
-    name: str
-    category: str
+    name: Optional[str] = None
+    category: Optional[str] = "default"
     description: Optional[str] = "Custom block"
-    html: str
+    html: Optional[str] = ""
     css: Optional[str] = ""
     thumbnail: Optional[str] = ""
-    author: Union[Author, str]
+    author: Optional[Union[Author, str]] = None
     template: UUID = Field(default_factory=uuid4)
     updated_at: Optional[datetime] = Field(default_factory=datetime.now)
 
