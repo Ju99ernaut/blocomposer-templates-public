@@ -32,7 +32,7 @@ async def read_comment_with_id(uuid: UUID, user: User = Depends(get_user)):
     comment = data.get_comment(uuid, user["id"])
     if not comment:
         raise HTTPException(status_code=404, detail="Comment not found")
-    return add_author(comment)
+    return comment
 
 
 @router.post("", response_model=Comment)
@@ -42,7 +42,7 @@ async def add_comment(comment: Comment, user: User = Depends(get_user)):
     comment = data.get_comment(comment.id, user["id"])
     if not comment:
         raise HTTPException(status_code=404, detail="Comment not found")
-    return add_author(comment)
+    return comment
 
 
 @router.patch("/{uuid}", response_model=Comment)
@@ -52,7 +52,7 @@ async def update_comment(uuid: UUID, comment: Comment, user: User = Depends(get_
     comment = data.get_comment(uuid, user["id"])
     if not comment:
         raise HTTPException(status_code=404, detail="Comment not found")
-    return add_author(comment)
+    return comment
 
 
 @router.delete("/{uuid}", response_model=Message)

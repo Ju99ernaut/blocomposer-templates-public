@@ -21,6 +21,17 @@ async def read_templates(
     page: Optional[int] = Query(0, minimum=0, description="Page number"),
     size: Optional[int] = Query(50, maximum=100, description="Page size"),
 ):
+    return [
+        prefix(template) for template in data.get_all_templates(user["id"], page, size)
+    ]
+
+
+@router.get("/expand", response_model=List[Template])
+async def read_templates(
+    user: User = Depends(get_user),
+    page: Optional[int] = Query(0, minimum=0, description="Page number"),
+    size: Optional[int] = Query(50, maximum=100, description="Page size"),
+):
     author = data.get_author(user["id"])
     return [
         add_author(prefix(template), author)
@@ -44,7 +55,7 @@ async def read_template_with_id(uuid: UUID):
     template = data.get_template(uuid)
     if not template:
         raise HTTPException(status_code=404, detail="Template not found")
-    return add_author(prefix(template))
+    return prefix(template)
 
 
 @router.post("/{uuid}", response_model=Template)
@@ -54,7 +65,7 @@ async def add_template(uuid: UUID, template: Template, user: User = Depends(get_
     template = data.get_template(uuid, user["id"])
     if not template:
         raise HTTPException(status_code=404, detail="Template not found")
-    return add_author(prefix(template))
+    return prefix(template)
 
 
 @router.delete("/{uuid}", response_model=Message)

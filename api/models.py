@@ -1,3 +1,4 @@
+from re import template
 from typing import List, Optional, Union
 from uuid import UUID, uuid4
 from fastapi import Query
@@ -50,32 +51,10 @@ class Asset(BaseModel):
 
 
 class Bookmark(BaseModel):
-    def __getitem__(self, item):
-        return getattr(self, item)
-
-    id: UUID = Field(default_factory=uuid4)
-    author: Optional[str] = None
-    bookmarks: Union[List[str], str]
-    updated_at: Optional[datetime] = Field(default_factory=datetime.now)
-
-    @validator("bookmarks")
-    def stringify(cls, v):
-        if type(v) == list:
-            return ",".join(v)
-        return v
-
-
-class BookmarkRef(BaseModel):
     id: UUID = Field(default_factory=uuid4)
     author: Optional[Union[Author, str]] = None
-    bookmarks: Union[List[str], str]
+    template: Union[Template, UUID]
     updated_at: Optional[datetime] = Field(default_factory=datetime.now)
-
-    @validator("bookmarks")
-    def listify(cls, v):
-        if type(v) == str:
-            return v.split(",")
-        return v
 
 
 class Comment(BaseModel):
