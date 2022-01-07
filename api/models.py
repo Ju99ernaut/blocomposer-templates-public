@@ -9,7 +9,6 @@ from constants import GJS_PREFIX
 
 class User(BaseModel):
     id: str
-    email: str
     role: str
     aud: str
     url: str
@@ -19,10 +18,17 @@ class User(BaseModel):
     invited_at: Union[datetime, str]
 
 
+class Author(BaseModel):
+    id: str
+    avatar_url: str
+    full_name: str
+
+
 class Template(BaseModel):
     id: UUID = Field(default_factory=uuid4)
-    user: Optional[str] = ""
+    author: Union[Author, str]
     name: Optional[str] = ""
+    category: Optional[str] = "default"
     thumbnail: Optional[str] = ""
     preview: Optional[AnyHttpUrl] = ""
     template: Optional[bool] = False
@@ -36,7 +42,7 @@ class Template(BaseModel):
 
 class Asset(BaseModel):
     id: UUID = Field(default_factory=uuid4)
-    user: Optional[str] = ""
+    author: Union[Author, str]
     name: str
     url: str
     size: Optional[int] = 0
@@ -47,7 +53,7 @@ class Bookmark(BaseModel):
     def __getitem__(self, item):
         return getattr(self, item)
 
-    user: Optional[str] = ""
+    author: str
     bookmarks: Union[List[str], str]
     updated_at: Optional[datetime] = Field(default_factory=datetime.now)
 
@@ -60,7 +66,7 @@ class Bookmark(BaseModel):
 
 class BookmarkRef(BaseModel):
     id: UUID = Field(default_factory=uuid4)
-    user: Optional[str] = ""
+    author: Author
     bookmarks: Union[List[str], str]
     updated_at: Optional[datetime] = Field(default_factory=datetime.now)
 
@@ -77,7 +83,7 @@ class Comment(BaseModel):
 
 class CommentRef(BaseModel):
     id: UUID = Field(default_factory=uuid4)
-    user: Optional[str] = None
+    author: Union[Author, str]
     template: UUID = Field(default_factory=uuid4)
     comment: str
     updated_at: Optional[datetime] = Field(default_factory=datetime.now)
@@ -91,7 +97,7 @@ class Block(BaseModel):
     html: str
     css: Optional[str] = ""
     thumbnail: Optional[str] = ""
-    user: Optional[str] = None
+    author: Union[Author, str]
     template: UUID = Field(default_factory=uuid4)
     updated_at: Optional[datetime] = Field(default_factory=datetime.now)
 
