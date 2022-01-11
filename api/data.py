@@ -84,6 +84,17 @@ def get_all_public_templates(db, limit, start):
     return table.find(public=True, _limit=limit, _offset=limit * start)
 
 
+@connect_db
+def get_templates_length(db):
+    return len(db[TEMPLATES_TABLE])
+
+
+@connect_db
+def get_user_templates_count(db, author):
+    table = db[TEMPLATES_TABLE]
+    return table.count(author=author)
+
+
 ############### assets ########################
 @connect_db
 def add_asset(db, asset):
@@ -121,6 +132,17 @@ def get_asset(db, uuid, author):
 def get_all_assets(db, author, limit, start):
     table = db[ASSETS_TABLE]
     return table.find(author=author, _limit=limit, _offset=limit * start)
+
+
+@connect_db
+def get_assets_length(db):
+    return len(db[ASSETS_TABLE])
+
+
+@connect_db
+def get_user_assets_count(db, author):
+    table = db[ASSETS_TABLE]
+    return table.count(author=author)
 
 
 ########################### bookmarks ##################################
@@ -165,6 +187,17 @@ def get_all_bookmarks(db, author, limit, start):
     return table.find(author=author, _limit=limit, _offset=limit * start)
 
 
+@connect_db
+def get_bookmarks_length(db):
+    return len(db[BOOKMARKS_TABLE])
+
+
+@connect_db
+def get_user_bookmarks_count(db, author):
+    table = db[BOOKMARKS_TABLE]
+    return table.count(author=author)
+
+
 ################################# blocks #################################
 @connect_db
 def add_block(db, block):
@@ -202,6 +235,17 @@ def get_block(db, uuid, author):
 def get_all_blocks(db, author, limit, start):
     table = db[BLOCKS_TABLE]
     return table.find(author=author, _limit=limit, _offset=limit * start)
+
+
+@connect_db
+def get_blocks_length(db):
+    return len(db[BLOCKS_TABLE])
+
+
+@connect_db
+def get_user_blocks_count(db, author):
+    table = db[BLOCKS_TABLE]
+    return table.count(author=author)
 
 
 ################################## comments ###################################
@@ -249,6 +293,17 @@ def get_all_comments(db, author, limit, start):
     return table.find(author=author, _limit=limit, _offset=limit * start)
 
 
+@connect_db
+def get_comments_length(db):
+    return len(db[COMMENTS_TABLE])
+
+
+@connect_db
+def get_user_comments_count(db, author):
+    table = db[COMMENTS_TABLE]
+    return table.count(author=author)
+
+
 ################################## users ###################################
 @connect_db
 def add_user(db, user):
@@ -263,6 +318,11 @@ def get_user(db, user_id):
     if row is not None:
         return row
     return None
+
+
+@connect_db
+def get_users_length(db):
+    return len(db[USERS_TABLE])
 
 
 @connect_db
@@ -284,6 +344,11 @@ def get_user_id(db, token):
 
 
 @connect_db
+def get_user_tokens_length(db):
+    return len(db[USERS_TOKENS_TABLE])
+
+
+@connect_db
 def add_author(db, user_id, full_name, avatar_url):
     table = db[AUTHORS_TABLE]
     table.upsert(
@@ -299,3 +364,8 @@ def get_author(db, user_id):
     if row is not None:
         return row
     return None
+
+
+@connect_db
+def get_authors_length(db):
+    return len(db[AUTHORS_TABLE])
