@@ -198,6 +198,12 @@ def get_user_bookmarks_count(db, author):
     return table.count(author=author)
 
 
+@connect_db
+def get_template_bookmarks_count(db, template):
+    table = db[BOOKMARKS_TABLE]
+    return table.count(template=template)
+
+
 ################################# blocks #################################
 @connect_db
 def add_block(db, block):

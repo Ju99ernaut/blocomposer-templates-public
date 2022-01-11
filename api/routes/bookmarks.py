@@ -56,6 +56,11 @@ async def read_bookmark_with_id(uuid: UUID, user: User = Depends(get_user)):
     return bookmark
 
 
+@router.get("/template/count/{uuid}", response_model=Count)
+async def read_template_count(uuid: UUID):
+    return {"count": data.get_template_bookmarks_count(uuid)}
+
+
 @router.post("", response_model=Bookmark)
 async def add_bookmark(bookmark: Bookmark, user: User = Depends(get_user)):
     bookmark.author = user["id"]
