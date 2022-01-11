@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, Query, status
-from models import Bookmark, User, Message
+from models import Bookmark, User, Message, Count
 from dependencies import get_user
 from constants import TEMPLATE_KEY, AUTHOR_KEY
 
@@ -41,6 +41,11 @@ async def read_bookmarks(
     return [
         expand(bookmark) for bookmark in data.get_all_bookmarks(user["id"], page, size)
     ]
+
+
+@router.get("/count", response_model=Count)
+async def read_count(user: User = Depends(get_user)):
+    return {"count": data.get_user_bookmarks_count(user["id"])}
 
 
 @router.get("/{uuid}", response_model=Bookmark)
