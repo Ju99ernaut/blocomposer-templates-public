@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, Query, status
-from models import Template, User, Message
+from models import Template, User, Message, Count
 from utils.tasks import prefix, add_author
 from dependencies import get_user
 
@@ -50,6 +50,11 @@ async def read_puplic_templates(
     ]
 
 
+@router.get("/count", response_model=Count)
+async def read_count(user: User = Depends(get_user)):
+    return {"count": data.get_user_templates_count(user["id"])}
+
+
 @router.get("/{uuid}", response_model=Template)
 async def read_template_with_id(uuid: UUID):
     template = data.get_template(uuid)
@@ -60,11 +65,11 @@ async def read_template_with_id(uuid: UUID):
 
 @router.post("/{uuid}", response_model=Template)
 async def add_template(uuid: UUID, template: Template, user: User = Depends(get_user)):
-    template.author = user["id"]
-    data.add_template(template.dict())
-    template = data.get_template(uuid, user["id"])
-    if not template:
-        raise HTTPException(status_code=404, detail="Template not found")
+    count = data.get_user_templates_count(user["id"])
+    template_db = data.get_template(uuid, user["id"])
+    if count < 4 or template_db:
+        template.author = user["id"]
+        data.add_template(template.dict())
     return prefix(template)
 
 

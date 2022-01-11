@@ -3,7 +3,7 @@ import data
 from uuid import UUID
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query, status
-from models import Asset, User, Message
+from models import Asset, User, Message, Count
 from dependencies import get_user
 from utils.tasks import add_author
 
@@ -34,6 +34,11 @@ async def read_assets(
     ]
 
 
+@router.get("/count", response_model=Count)
+async def read_count(user: User = Depends(get_user)):
+    return {"count": data.get_user_assets_count(user["id"])}
+
+
 @router.get("/{uuid}", response_model=Asset)
 async def read_asset(uuid: UUID, user: User = Depends(get_user)):
     asset = data.get_asset(uuid, user["id"])
@@ -44,8 +49,10 @@ async def read_asset(uuid: UUID, user: User = Depends(get_user)):
 
 @router.post("", response_model=Asset)
 async def add_asset(asset: Asset, user: User = Depends(get_user)):
-    asset.author = user["id"]
-    data.add_asset(asset.dict())
+    count = data.get_user_assets_count(user["id"])
+    if count < 25:
+        asset.author = user["id"]
+        data.add_asset(asset.dict())
     asset_db = data.get_asset(asset.id, user["id"])
     if not asset_db:
         raise HTTPException(status_code=404, detail="Item not found")
