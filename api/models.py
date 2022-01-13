@@ -1,8 +1,7 @@
-from re import template
-from typing import List, Optional, Union
+from typing import Optional, Union
 from uuid import UUID, uuid4
 from fastapi import Query
-from pydantic import BaseModel, Field, AnyHttpUrl, validator
+from pydantic import BaseModel, Field, AnyHttpUrl
 from datetime import datetime
 
 from constants import GJS_PREFIX
@@ -76,6 +75,12 @@ class Block(BaseModel):
     author: Optional[Union[Author, str]] = None
     template: UUID = Field(default_factory=uuid4)
     updated_at: Optional[datetime] = Field(default_factory=datetime.now)
+
+
+class Email(BaseModel):
+    id: UUID = Field(default_factory=uuid4)
+    email: str
+    subscribed_at: Optional[datetime] = Field(default_factory=datetime.now)
 
 
 class Message(BaseModel):

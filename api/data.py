@@ -7,11 +7,13 @@ from constants import (
     USERS_TABLE,
     USERS_TOKENS_TABLE,
     AUTHORS_TABLE,
+    EMAILS_TABLE,
     ID_KEY,
     TOKEN_KEY,
     USER_KEY,
     FULL_NAME_KEY,
     AVATAR_URL_KEY,
+    EMAIL_KEY,
 )
 
 from utils.db import connect_db
@@ -42,6 +44,7 @@ def setup(db):
     db.create_table(COMMENTS_TABLE, primary_id=ID_KEY, primary_type=db.types.string)
     db.create_table(USERS_TABLE, primary_id=ID_KEY, primary_type=db.types.string)
     db.create_table(AUTHORS_TABLE, primary_id=ID_KEY, primary_type=db.types.string)
+    db.create_table(EMAILS_TABLE, primary_id=ID_KEY, primary_type=db.types.string)
 
 
 @connect_db
@@ -375,3 +378,22 @@ def get_author(db, user_id):
 @connect_db
 def get_authors_length(db):
     return len(db[AUTHORS_TABLE])
+
+
+################################## users ###################################
+@connect_db
+def add_email(db, email):
+    table = db[EMAILS_TABLE]
+    table.upsert(email, [EMAIL_KEY])
+
+
+@connect_db
+def remove_email(db, email):
+    table = db[EMAILS_TABLE]
+    table.delete(email=email)
+
+
+@connect_db
+def get_all_emails(db):
+    table = db[EMAILS_TABLE]
+    return table.find()

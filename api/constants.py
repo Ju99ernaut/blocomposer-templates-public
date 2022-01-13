@@ -9,6 +9,7 @@ COMMENTS_TABLE = "comments"
 USERS_TABLE = "users"
 USERS_TOKENS_TABLE = "users_tokens"
 AUTHORS_TABLE = "authors"
+EMAILS_TABLE = "emails"
 
 ASSETS_KEY = "assets"
 ID_KEY = "id"
@@ -29,6 +30,7 @@ COMMENT_KEY = "comment"
 TOKEN_KEY = "token"
 FULL_NAME_KEY = "full_name"
 AVATAR_URL_KEY = "avatar_url"
+EMAIL_KEY = "email"
 
 API_TAGS_METADATA = [
     {"name": "user", "description": "User profile"},
@@ -37,6 +39,7 @@ API_TAGS_METADATA = [
     {"name": "blocks", "description": "Blocomposer user blocks"},
     {"name": "bookmarks", "description": "Blocomposer user bookmarks"},
     {"name": "comments", "description": "Blocomposer user comments"},
+    {"name": "newsletter", "description": "Register/Unregister newsletter"},
 ]
 
 GJS_PREFIX = "gjs-"

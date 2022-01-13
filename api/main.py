@@ -3,7 +3,7 @@ import uvicorn
 
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
-from routes import templates, assets, users, blocks, bookmarks, comments
+from routes import templates, assets, users, blocks, bookmarks, comments, newsletter
 
 import config
 import data
@@ -40,6 +40,7 @@ app.include_router(assets.router)
 app.include_router(blocks.router)
 app.include_router(bookmarks.router)
 app.include_router(comments.router)
+app.include_router(newsletter.router)
 
 
 @app.get("/")
