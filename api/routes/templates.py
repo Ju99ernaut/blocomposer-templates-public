@@ -16,7 +16,7 @@ router = APIRouter(
 
 
 @router.get("", response_model=List[Template])
-async def read_templates(
+async def read_user_templates(
     user: User = Depends(get_user),
     page: Optional[int] = Query(0, minimum=0, description="Page number"),
     size: Optional[int] = Query(50, maximum=100, description="Page size"),
@@ -27,7 +27,7 @@ async def read_templates(
 
 
 @router.get("/expand", response_model=List[Template])
-async def read_templates(
+async def read_expanded_templates(
     user: User = Depends(get_user),
     page: Optional[int] = Query(0, minimum=0, description="Page number"),
     size: Optional[int] = Query(50, maximum=100, description="Page size"),
@@ -63,20 +63,40 @@ async def read_template_with_id(uuid: UUID):
     return prefix(template)
 
 
+@router.get("/expand/{uuid}", response_model=Template)
+async def read_expanded_template_with_id(uuid: UUID):
+    template = data.get_template(uuid)
+    if not template:
+        raise HTTPException(status_code=404, detail="Template not found")
+    return add_author(prefix(template))
+
+
+@router.get("/category/{category}", response_model=List[Template])
+async def read_templates_by_category(
+    category: str,
+    page: Optional[int] = Query(0, minimum=0, description="Page number"),
+    size: Optional[int] = Query(50, maximum=100, description="Page size"),
+):
+    return [
+        add_author(prefix(template))
+        for template in data.get_templates_by_category(category, page, size)
+    ]
+
+
 @router.post("/{uuid}", response_model=Template)
 async def add_template(uuid: UUID, template: Template, user: User = Depends(get_user)):
     count = data.get_user_templates_count(user["id"])
-    template_db = data.get_template(uuid, user["id"])
+    template_db = data.get_template(uuid)
     if count < 4 or template_db:
         template.author = user["id"]
         data.add_template(template.dict())
-    return prefix(template)
+    return prefix(template.dict())
 
 
 @router.delete("/{uuid}", response_model=Message)
 async def delete_template_with_id(uuid: UUID, user: User = Depends(get_user)):
     data.remove_template(uuid, user["id"])
-    if data.get_template(uuid, user["id"]):
+    if data.get_template(uuid):
         raise HTTPException(
             status_code=status.HTTP_417_EXPECTATION_FAILED, detail="Failed to delete"
         )
