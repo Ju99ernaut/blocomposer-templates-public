@@ -30,14 +30,14 @@ class Template(BaseModel):
     name: Optional[str] = ""
     category: Optional[str] = "default"
     thumbnail: Optional[str] = ""
-    preview: Optional[AnyHttpUrl] = ""
+    preview: Optional[str] = ""
     template: Optional[bool] = False
     public: Optional[bool] = False
     description: Optional[str] = ""
     assets: Optional[str] = Query("", alias=f"{GJS_PREFIX}assets")
     pages: Optional[str] = Query("", alias=f"{GJS_PREFIX}pages")
     styles: Optional[str] = Query("", alias=f"{GJS_PREFIX}styles")
-    updated_at: Optional[datetime] = Field(default_factory=datetime.now)
+    updated_at: Optional[Union[datetime, str]] = Field(default_factory=datetime.now)
 
 
 class Asset(BaseModel):
@@ -46,14 +46,14 @@ class Asset(BaseModel):
     name: str
     url: str
     size: Optional[int] = 0
-    updated_at: Optional[datetime] = Field(default_factory=datetime.now)
+    updated_at: Optional[Union[datetime, str]] = Field(default_factory=datetime.now)
 
 
 class Bookmark(BaseModel):
     id: UUID = Field(default_factory=uuid4)
     author: Optional[Union[Author, str]] = None
     template: Union[Template, UUID]
-    updated_at: Optional[datetime] = Field(default_factory=datetime.now)
+    updated_at: Optional[Union[datetime, str]] = Field(default_factory=datetime.now)
 
 
 class Comment(BaseModel):
@@ -61,7 +61,7 @@ class Comment(BaseModel):
     author: Optional[Union[Author, str]] = None
     template: UUID = Field(default_factory=uuid4)
     comment: str
-    updated_at: Optional[datetime] = Field(default_factory=datetime.now)
+    updated_at: Optional[Union[datetime, str]] = Field(default_factory=datetime.now)
 
 
 class Block(BaseModel):
@@ -74,13 +74,13 @@ class Block(BaseModel):
     thumbnail: Optional[str] = ""
     author: Optional[Union[Author, str]] = None
     template: UUID = Field(default_factory=uuid4)
-    updated_at: Optional[datetime] = Field(default_factory=datetime.now)
+    updated_at: Optional[Union[datetime, str]] = Field(default_factory=datetime.now)
 
 
 class Email(BaseModel):
     id: UUID = Field(default_factory=uuid4)
     email: str
-    subscribed_at: Optional[datetime] = Field(default_factory=datetime.now)
+    subscribed_at: Optional[Union[datetime, str]] = Field(default_factory=datetime.now)
 
 
 class Message(BaseModel):
