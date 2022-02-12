@@ -26,7 +26,7 @@ async def unsubscribe_to_newsletter(email: Email):
     return {"msg": "success"}
 
 
-@router.get("/subscribe", response_model=Message)
+@router.get("/unsubscribe", response_model=Message)
 async def unsubscribe_to_newsletter_using_querystring(
     email: str = Query(..., description="Email to register")
 ):
