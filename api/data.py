@@ -76,15 +76,21 @@ def get_template(db, uuid):
 
 
 @connect_db
-def get_all_templates(db, author, limit, start):
+def get_all_templates(db, author, page, size):
     table = db[TEMPLATES_TABLE]
-    return table.find(author=author, _limit=limit, _offset=limit * start)
+    return table.find(author=author, _limit=size, _offset=page * size)
 
 
 @connect_db
-def get_all_public_templates(db, limit, start):
+def get_templates_by_category(db, category, page, size):
     table = db[TEMPLATES_TABLE]
-    return table.find(public=True, _limit=limit, _offset=limit * start)
+    return table.find(category=category, _limit=size, _offset=page * size)
+
+
+@connect_db
+def get_all_public_templates(db, page, size):
+    table = db[TEMPLATES_TABLE]
+    return table.find(public=True, _limit=size, _offset=page * size)
 
 
 @connect_db
@@ -132,9 +138,9 @@ def get_asset(db, uuid, author):
 
 
 @connect_db
-def get_all_assets(db, author, limit, start):
+def get_all_assets(db, author, page, size):
     table = db[ASSETS_TABLE]
-    return table.find(author=author, _limit=limit, _offset=limit * start)
+    return table.find(author=author, _limit=size, _offset=page * size)
 
 
 @connect_db
@@ -185,9 +191,9 @@ def get_bookmark(db, uuid, author):
 
 
 @connect_db
-def get_all_bookmarks(db, author, limit, start):
+def get_all_bookmarks(db, author, page, size):
     table = db[BOOKMARKS_TABLE]
-    return table.find(author=author, _limit=limit, _offset=limit * start)
+    return table.find(author=author, _limit=size, _offset=page * size)
 
 
 @connect_db
@@ -241,9 +247,9 @@ def get_block(db, uuid, author):
 
 
 @connect_db
-def get_all_blocks(db, author, limit, start):
+def get_all_blocks(db, author, page, size):
     table = db[BLOCKS_TABLE]
-    return table.find(author=author, _limit=limit, _offset=limit * start)
+    return table.find(author=author, _limit=size, _offset=page * size)
 
 
 @connect_db
@@ -291,15 +297,15 @@ def get_comment(db, uuid, author):
 
 
 @connect_db
-def get_all_template_comments(db, template, limit, start):
+def get_all_template_comments(db, template, page, size):
     table = db[COMMENTS_TABLE]
-    return table.find(template=str(template), _limit=limit, _offset=limit * start)
+    return table.find(template=str(template), _limit=size, _offset=page * size)
 
 
 @connect_db
-def get_all_comments(db, author, limit, start):
+def get_all_comments(db, author, page, size):
     table = db[COMMENTS_TABLE]
-    return table.find(author=author, _limit=limit, _offset=limit * start)
+    return table.find(author=author, _limit=size, _offset=page * size)
 
 
 @connect_db
@@ -380,10 +386,11 @@ def get_authors_length(db):
     return len(db[AUTHORS_TABLE])
 
 
-################################## users ###################################
+################################## emails ###################################
 @connect_db
 def add_email(db, email):
     table = db[EMAILS_TABLE]
+    email[ID_KEY] = str(email[ID_KEY])
     table.upsert(email, [EMAIL_KEY])
 
 
