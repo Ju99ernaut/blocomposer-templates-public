@@ -22,8 +22,8 @@ if os.getenv("WHITELIST_ORIGINS"):
     allow_origins = os.getenv("WHITELIST_ORIGINS").split(",")
 else:
     allow_origins = [
-        "http://localhost:8080/",
-        "http://localhost:8080",
+        "http://localhost:3000/",
+        "http://localhost:3000",
     ]
 
 app.add_middleware(
