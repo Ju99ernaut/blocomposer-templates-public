@@ -23,10 +23,14 @@ def get_user(authorization: str = Header(..., description="e.g. Basic token")):
     user = result.json()
     data.add_user(user)
     data.add_user_token(authorization, user["id"])
+    try:
+        user["user_metadata"]["fallback"] = ""
+    except:
+        user["user_metadata"] = {"fallback": ""}
     data.add_author(
         user["id"],
-        user["user_metadata"]["full_name"],
-        user["user_metadata"]["avatar_url"],
+        user["user_metadata"].get("full_name", ""),
+        user["user_metadata"].get("avatar_url", ""),
     )
 
     return user
