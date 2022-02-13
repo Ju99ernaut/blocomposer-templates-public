@@ -14,6 +14,7 @@ from constants import (
     FULL_NAME_KEY,
     AVATAR_URL_KEY,
     EMAIL_KEY,
+    TEMPLATE_KEY,
 )
 
 from utils.db import connect_db
@@ -159,6 +160,7 @@ def get_user_assets_count(db, author):
 def add_bookmark(db, bookmark):
     table = db[BOOKMARKS_TABLE]
     bookmark[ID_KEY] = str(bookmark[ID_KEY])
+    bookmark[TEMPLATE_KEY] = str(bookmark[TEMPLATE_KEY])
     table.insert(bookmark)
 
 
@@ -210,7 +212,7 @@ def get_user_bookmarks_count(db, author):
 @connect_db
 def get_template_bookmarks_count(db, template):
     table = db[BOOKMARKS_TABLE]
-    return table.count(template=template)
+    return table.count(template=str(template))
 
 
 ################################# blocks #################################
@@ -218,6 +220,7 @@ def get_template_bookmarks_count(db, template):
 def add_block(db, block):
     table = db[BLOCKS_TABLE]
     block[ID_KEY] = str(block[ID_KEY])
+    block[TEMPLATE_KEY] = str(block[TEMPLATE_KEY])
     table.insert(block)
 
 
@@ -268,6 +271,7 @@ def get_user_blocks_count(db, author):
 def add_comment(db, comment):
     table = db[COMMENTS_TABLE]
     comment[ID_KEY] = str(comment[ID_KEY])
+    comment[TEMPLATE_KEY] = str(comment[TEMPLATE_KEY])
     table.insert(comment)
 
 

@@ -6,6 +6,7 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from models import Bookmark, User, Message, Count
 from dependencies import get_user
+from utils.tasks import prefix
 from constants import TEMPLATE_KEY, AUTHOR_KEY
 
 router = APIRouter(
@@ -16,7 +17,7 @@ router = APIRouter(
 
 
 def expand(dictionary):
-    dictionary[TEMPLATE_KEY] = data.get_template(dictionary[TEMPLATE_KEY])
+    dictionary[TEMPLATE_KEY] = prefix(data.get_template(dictionary[TEMPLATE_KEY]))
     dictionary[TEMPLATE_KEY][AUTHOR_KEY] = data.get_author(
         dictionary[TEMPLATE_KEY][AUTHOR_KEY]
     )

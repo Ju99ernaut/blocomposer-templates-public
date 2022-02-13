@@ -109,7 +109,7 @@ def prefix(dictionary):
     }
 
 
-def add_author(dictionary, author):
+def add_author(dictionary, author=False):
     """
     Add author were there is author_id
 
