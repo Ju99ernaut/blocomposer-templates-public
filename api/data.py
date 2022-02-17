@@ -109,14 +109,12 @@ def get_user_templates_count(db, author):
 @connect_db
 def add_asset(db, asset):
     table = db[ASSETS_TABLE]
-    asset[ID_KEY] = str(asset[ID_KEY])
     table.insert(asset)
 
 
 @connect_db
 def update_asset(db, asset):
     table = db[ASSETS_TABLE]
-    asset[ID_KEY] = str(asset[ID_KEY])
     table.update(
         {"id": asset[ID_KEY], **{k: v for k, v in asset.items() if v is not None}},
         [ID_KEY],
@@ -124,15 +122,15 @@ def update_asset(db, asset):
 
 
 @connect_db
-def remove_asset(db, uuid, author):
+def remove_asset(db, id, author):
     table = db[ASSETS_TABLE]
-    table.delete(id=str(uuid), author=author)
+    table.delete(id=id, author=author)
 
 
 @connect_db
-def get_asset(db, uuid, author):
+def get_asset(db, id, author):
     table = db[ASSETS_TABLE]
-    row = table.find_one(id=str(uuid), author=author)
+    row = table.find_one(id=id, author=author)
     if row is not None:
         return row
     return None

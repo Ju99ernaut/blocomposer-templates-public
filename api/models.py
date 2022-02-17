@@ -41,10 +41,11 @@ class Template(BaseModel):
 
 
 class Asset(BaseModel):
-    id: UUID = Field(default_factory=uuid4)
+    id: str
     author: Optional[Union[Author, str]] = None
     name: str
-    url: str
+    caption: str
+    src: str
     size: Optional[int] = 0
     updated_at: Optional[Union[datetime, str]] = Field(default_factory=datetime.now)
 

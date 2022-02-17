@@ -22,6 +22,10 @@
         "NETLIFY_IDENTITY_ENDPOINT": {
             "description": "Netlify identity API endpoint",
             "value": ""
+        },
+        "TUS_ENDPOINT": {
+            "description": "Tus endpoint for file uploads",
+            "value": "https://tusd.tusdemo.net/files/"
         }
     }
 }
