@@ -37,6 +37,7 @@ class Template(BaseModel):
     assets: Optional[str] = Query("", alias=f"{GJS_PREFIX}assets")
     pages: Optional[str] = Query("", alias=f"{GJS_PREFIX}pages")
     styles: Optional[str] = Query("", alias=f"{GJS_PREFIX}styles")
+    framework: Optional[str] = "none"
     updated_at: Optional[Union[datetime, str]] = Field(default_factory=datetime.now)
 
 
