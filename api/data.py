@@ -38,14 +38,15 @@ from utils.db import connect_db
 
 @connect_db
 def setup(db):
-    db.create_table(TEMPLATES_TABLE, primary_id=ID_KEY, primary_type=db.types.string)
-    db.create_table(ASSETS_TABLE, primary_id=ID_KEY, primary_type=db.types.string)
-    db.create_table(BLOCKS_TABLE, primary_id=ID_KEY, primary_type=db.types.string)
-    db.create_table(BOOKMARKS_TABLE, primary_id=ID_KEY, primary_type=db.types.string)
-    db.create_table(COMMENTS_TABLE, primary_id=ID_KEY, primary_type=db.types.string)
-    db.create_table(USERS_TABLE, primary_id=ID_KEY, primary_type=db.types.string)
-    db.create_table(AUTHORS_TABLE, primary_id=ID_KEY, primary_type=db.types.string)
-    db.create_table(EMAILS_TABLE, primary_id=ID_KEY, primary_type=db.types.string)
+    print("INFO:     Running migrations.")
+    db.create_table(TEMPLATES_TABLE, primary_id=ID_KEY, primary_type=db.types.text)
+    db.create_table(ASSETS_TABLE, primary_id=ID_KEY, primary_type=db.types.text)
+    db.create_table(BLOCKS_TABLE, primary_id=ID_KEY, primary_type=db.types.text)
+    db.create_table(BOOKMARKS_TABLE, primary_id=ID_KEY, primary_type=db.types.text)
+    db.create_table(COMMENTS_TABLE, primary_id=ID_KEY, primary_type=db.types.text)
+    db.create_table(USERS_TABLE, primary_id=ID_KEY, primary_type=db.types.text)
+    db.create_table(AUTHORS_TABLE, primary_id=ID_KEY, primary_type=db.types.text)
+    db.create_table(EMAILS_TABLE, primary_id=ID_KEY, primary_type=db.types.text)
 
 
 @connect_db
