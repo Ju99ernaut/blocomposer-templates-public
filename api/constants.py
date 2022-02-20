@@ -13,6 +13,8 @@ EMAILS_TABLE = "emails"
 
 ASSETS_KEY = "assets"
 ID_KEY = "id"
+UID_KEY = "uid"
+UUID_KEY = "uuid"
 NAME_KEY = "name"
 DESCRIPTION_KEY = "description"
 TEMPLATE_KEY = "template"

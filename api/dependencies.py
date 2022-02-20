@@ -8,7 +8,9 @@ from fastapi import Header, HTTPException, status
 def get_user(authorization: str = Header(..., description="e.g. Basic token")):
     user_id = data.get_user_id(authorization)
     if user_id:
-        return data.get_user(user_id)
+        user = data.get_user(user_id)
+        user["id"] = user["uid"]
+        return user
 
     url = os.getenv("NETLIFY_IDENTITY_ENDPOINT") + "/user"
     headers = {"authorization": authorization}
@@ -21,6 +23,8 @@ def get_user(authorization: str = Header(..., description="e.g. Basic token")):
         )
 
     user = result.json()
+    user["uid"] = user["id"]
+    user.pop("id", None)
     data.add_user(user)
     data.add_user_token(authorization, user["id"])
     try:
@@ -33,4 +37,5 @@ def get_user(authorization: str = Header(..., description="e.g. Basic token")):
         user["user_metadata"].get("avatar_url", ""),
     )
 
+    user["id"] = user["uid"]
     return user

@@ -60,7 +60,6 @@ async def websocket_endpoint(websocket: WebSocket):
 
 
 if __name__ == "__main__":
-    data.setup()
     uvicorn.run(
         "main:app",
         host=config.CONFIG.host,

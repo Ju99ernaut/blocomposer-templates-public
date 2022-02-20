@@ -8,7 +8,7 @@ from constants import GJS_PREFIX
 
 
 class User(BaseModel):
-    id: str
+    uid: str
     role: str
     aud: str
     url: str
@@ -19,13 +19,13 @@ class User(BaseModel):
 
 
 class Author(BaseModel):
-    id: str
+    uid: str
     avatar_url: str
     full_name: str
 
 
 class Template(BaseModel):
-    id: UUID = Field(default_factory=uuid4)
+    uuid: UUID = Field(default_factory=uuid4)
     author: Optional[Union[Author, str]] = None
     name: Optional[str] = ""
     category: Optional[str] = "default"
@@ -42,7 +42,7 @@ class Template(BaseModel):
 
 
 class Asset(BaseModel):
-    id: str
+    uid: str
     author: Optional[Union[Author, str]] = None
     name: str
     caption: str
@@ -52,14 +52,14 @@ class Asset(BaseModel):
 
 
 class Bookmark(BaseModel):
-    id: UUID = Field(default_factory=uuid4)
+    uuid: UUID = Field(default_factory=uuid4)
     author: Optional[Union[Author, str]] = None
     template: Union[Template, UUID]
     updated_at: Optional[Union[datetime, str]] = Field(default_factory=datetime.now)
 
 
 class Comment(BaseModel):
-    id: UUID = Field(default_factory=uuid4)
+    uuid: UUID = Field(default_factory=uuid4)
     author: Optional[Union[Author, str]] = None
     template: UUID = Field(default_factory=uuid4)
     comment: str
@@ -67,7 +67,7 @@ class Comment(BaseModel):
 
 
 class Block(BaseModel):
-    id: UUID = Field(default_factory=uuid4)
+    uuid: UUID = Field(default_factory=uuid4)
     name: Optional[str] = None
     category: Optional[str] = "default"
     description: Optional[str] = "Custom block"
@@ -80,7 +80,7 @@ class Block(BaseModel):
 
 
 class Email(BaseModel):
-    id: UUID = Field(default_factory=uuid4)
+    uuid: UUID = Field(default_factory=uuid4)
     email: str
     subscribed_at: Optional[Union[datetime, str]] = Field(default_factory=datetime.now)
 

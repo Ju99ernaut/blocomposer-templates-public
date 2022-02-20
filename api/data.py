@@ -8,7 +8,8 @@ from constants import (
     USERS_TOKENS_TABLE,
     AUTHORS_TABLE,
     EMAILS_TABLE,
-    ID_KEY,
+    UID_KEY,
+    UUID_KEY,
     TOKEN_KEY,
     USER_KEY,
     FULL_NAME_KEY,
@@ -37,41 +38,28 @@ from utils.db import connect_db
 
 
 @connect_db
-def setup(db):
-    print("INFO:     Running migrations.")
-    db[TEMPLATES_TABLE].create_column(ID_KEY, db.types.text, primary_key=True)
-    db[ASSETS_TABLE].create_column(ID_KEY, db.types.text, primary_key=True)
-    db[BLOCKS_TABLE].create_column(ID_KEY, db.types.text, primary_key=True)
-    db[BOOKMARKS_TABLE].create_column(ID_KEY, db.types.text, primary_key=True)
-    db[COMMENTS_TABLE].create_column(ID_KEY, db.types.text, primary_key=True)
-    db[USERS_TABLE].create_column(ID_KEY, db.types.text, primary_key=True)
-    db[AUTHORS_TABLE].create_column(ID_KEY, db.types.text, primary_key=True)
-    db[EMAILS_TABLE].create_column(ID_KEY, db.types.text, primary_key=True)
-
-
-@connect_db
 def add_template(db, template):
     table = db[TEMPLATES_TABLE]
-    template[ID_KEY] = str(template[ID_KEY])
+    template[UUID_KEY] = str(template[UUID_KEY])
     table.upsert(
         {
-            "id": template[ID_KEY],
+            "uuid": template[UUID_KEY],
             **{k: v for k, v in template.items() if v is not None},
         },
-        [ID_KEY],
+        [UUID_KEY],
     )
 
 
 @connect_db
 def remove_template(db, uuid, author):
     table = db[TEMPLATES_TABLE]
-    table.delete(id=str(uuid), author=author)
+    table.delete(uuid=str(uuid), author=author)
 
 
 @connect_db
 def get_template(db, uuid):
     table = db[TEMPLATES_TABLE]
-    row = table.find_one(id=str(uuid))
+    row = table.find_one(uuid=str(uuid))
     if row is not None:
         return row
     return None
@@ -117,21 +105,21 @@ def add_asset(db, asset):
 def update_asset(db, asset):
     table = db[ASSETS_TABLE]
     table.update(
-        {"id": asset[ID_KEY], **{k: v for k, v in asset.items() if v is not None}},
-        [ID_KEY],
+        {"uid": asset[UID_KEY], **{k: v for k, v in asset.items() if v is not None}},
+        [UID_KEY],
     )
 
 
 @connect_db
-def remove_asset(db, id, author):
+def remove_asset(db, uid, author):
     table = db[ASSETS_TABLE]
-    table.delete(id=id, author=author)
+    table.delete(uid=uid, author=author)
 
 
 @connect_db
-def get_asset(db, id, author):
+def get_asset(db, uid, author):
     table = db[ASSETS_TABLE]
-    row = table.find_one(id=id, author=author)
+    row = table.find_one(uid=uid, author=author)
     if row is not None:
         return row
     return None
@@ -158,7 +146,7 @@ def get_user_assets_count(db, author):
 @connect_db
 def add_bookmark(db, bookmark):
     table = db[BOOKMARKS_TABLE]
-    bookmark[ID_KEY] = str(bookmark[ID_KEY])
+    bookmark[UUID_KEY] = str(bookmark[UUID_KEY])
     bookmark[TEMPLATE_KEY] = str(bookmark[TEMPLATE_KEY])
     table.insert(bookmark)
 
@@ -166,26 +154,26 @@ def add_bookmark(db, bookmark):
 @connect_db
 def update_bookmark(db, bookmark):
     table = db[BOOKMARKS_TABLE]
-    bookmark[ID_KEY] = str(bookmark[ID_KEY])
+    bookmark[UUID_KEY] = str(bookmark[UUID_KEY])
     table.update(
         {
-            "id": bookmark[ID_KEY],
+            "uuid": bookmark[UUID_KEY],
             **{k: v for k, v in bookmark.items() if v is not None},
         },
-        [ID_KEY],
+        [UUID_KEY],
     )
 
 
 @connect_db
 def remove_bookmark(db, uuid, author):
     table = db[BOOKMARKS_TABLE]
-    table.delete(id=str(uuid), author=author)
+    table.delete(uuid=str(uuid), author=author)
 
 
 @connect_db
 def get_bookmark(db, uuid, author):
     table = db[BOOKMARKS_TABLE]
-    row = table.find_one(id=str(uuid), author=author)
+    row = table.find_one(uuid=str(uuid), author=author)
     if row is not None:
         return row
     return None
@@ -218,7 +206,7 @@ def get_template_bookmarks_count(db, template):
 @connect_db
 def add_block(db, block):
     table = db[BLOCKS_TABLE]
-    block[ID_KEY] = str(block[ID_KEY])
+    block[UUID_KEY] = str(block[UUID_KEY])
     block[TEMPLATE_KEY] = str(block[TEMPLATE_KEY])
     table.insert(block)
 
@@ -226,23 +214,23 @@ def add_block(db, block):
 @connect_db
 def update_block(db, block):
     table = db[BLOCKS_TABLE]
-    block[ID_KEY] = str(block[ID_KEY])
+    block[UUID_KEY] = str(block[UUID_KEY])
     table.update(
-        {"id": block[ID_KEY], **{k: v for k, v in block.items() if v is not None}},
-        [ID_KEY],
+        {"uuid": block[UUID_KEY], **{k: v for k, v in block.items() if v is not None}},
+        [UUID_KEY],
     )
 
 
 @connect_db
 def remove_block(db, uuid, author):
     table = db[BLOCKS_TABLE]
-    table.delete(id=str(uuid), author=author)
+    table.delete(uuid=str(uuid), author=author)
 
 
 @connect_db
 def get_block(db, uuid, author):
     table = db[BLOCKS_TABLE]
-    row = table.find_one(id=str(uuid), author=author)
+    row = table.find_one(uuid=str(uuid), author=author)
     if row is not None:
         return row
     return None
@@ -269,7 +257,7 @@ def get_user_blocks_count(db, author):
 @connect_db
 def add_comment(db, comment):
     table = db[COMMENTS_TABLE]
-    comment[ID_KEY] = str(comment[ID_KEY])
+    comment[UUID_KEY] = str(comment[UUID_KEY])
     comment[TEMPLATE_KEY] = str(comment[TEMPLATE_KEY])
     table.insert(comment)
 
@@ -277,23 +265,26 @@ def add_comment(db, comment):
 @connect_db
 def update_comment(db, comment):
     table = db[COMMENTS_TABLE]
-    comment[ID_KEY] = str(comment[ID_KEY])
+    comment[UUID_KEY] = str(comment[UUID_KEY])
     table.update(
-        {"id": comment[ID_KEY], **{k: v for k, v in comment.items() if v is not None}},
-        [ID_KEY],
+        {
+            "uuid": comment[UUID_KEY],
+            **{k: v for k, v in comment.items() if v is not None},
+        },
+        [UUID_KEY],
     )
 
 
 @connect_db
 def remove_comment(db, uuid, author):
     table = db[COMMENTS_TABLE]
-    table.delete(id=str(uuid), author=author)
+    table.delete(uuid=str(uuid), author=author)
 
 
 @connect_db
 def get_comment(db, uuid, author):
     table = db[COMMENTS_TABLE]
-    row = table.find_one(id=str(uuid), author=author)
+    row = table.find_one(uuid=str(uuid), author=author)
     if row is not None:
         return row
     return None
@@ -326,13 +317,13 @@ def get_user_comments_count(db, author):
 @connect_db
 def add_user(db, user):
     table = db[USERS_TABLE]
-    table.upsert(user, [ID_KEY])
+    table.upsert(user, [UID_KEY])
 
 
 @connect_db
 def get_user(db, user_id):
     table = db[USERS_TABLE]
-    row = table.find_one(id=user_id)
+    row = table.find_one(uid=user_id)
     if row is not None:
         return row
     return None
@@ -370,15 +361,15 @@ def get_user_tokens_length(db):
 def add_author(db, user_id, full_name, avatar_url):
     table = db[AUTHORS_TABLE]
     table.upsert(
-        {ID_KEY: user_id, FULL_NAME_KEY: full_name, AVATAR_URL_KEY: avatar_url},
-        [ID_KEY],
+        {UID_KEY: user_id, FULL_NAME_KEY: full_name, AVATAR_URL_KEY: avatar_url},
+        [UID_KEY],
     )
 
 
 @connect_db
 def get_author(db, user_id):
     table = db[AUTHORS_TABLE]
-    row = table.find_one(id=user_id)
+    row = table.find_one(uid=user_id)
     if row is not None:
         return row
     return None
@@ -393,7 +384,7 @@ def get_authors_length(db):
 @connect_db
 def add_email(db, email):
     table = db[EMAILS_TABLE]
-    email[ID_KEY] = str(email[ID_KEY])
+    email[UUID_KEY] = str(email[UUID_KEY])
     table.upsert(email, [EMAIL_KEY])
 
 
