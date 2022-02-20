@@ -26,13 +26,13 @@ def get_user(authorization: str = Header(..., description="e.g. Basic token")):
     user["uid"] = user["id"]
     user.pop("id", None)
     data.add_user(user)
-    data.add_user_token(authorization, user["id"])
+    data.add_user_token(authorization, user["uid"])
     try:
         user["user_metadata"]["fallback"] = ""
     except:
         user["user_metadata"] = {"fallback": ""}
     data.add_author(
-        user["id"],
+        user["uid"],
         user["user_metadata"].get("full_name", ""),
         user["user_metadata"].get("avatar_url", ""),
     )

@@ -54,17 +54,17 @@ async def add_asset(asset: Asset, user: User = Depends(get_user)):
     if count < 25:
         asset.author = user["id"]
         data.add_asset(asset.dict())
-    asset_db = data.get_asset(asset.id, user["id"])
+    asset_db = data.get_asset(asset.uid, user["id"])
     if not asset_db:
         raise HTTPException(status_code=404, detail="Item not found")
     return asset_db
 
 
 @router.patch("/{uid}", response_model=Asset)
-async def update_asset(id: str, asset: Asset, user: User = Depends(get_user)):
-    asset.id = id
+async def update_asset(uid: str, asset: Asset, user: User = Depends(get_user)):
+    asset.uid = uid
     data.update_asset(asset.dict())
-    asset_db = data.get_asset(asset.id, user["id"])
+    asset_db = data.get_asset(asset.uid, user["id"])
     if not asset_db:
         raise HTTPException(status_code=404, detail="Item not found")
     return asset_db

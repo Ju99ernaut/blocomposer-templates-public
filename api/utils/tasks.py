@@ -84,7 +84,7 @@ def repeat_every(
     return decorator
 
 
-def prefix(dictionary):
+def prefix(dictionary, uuid=False):
     """
     Add prefix to assets, html, css, components, styles keys
 
@@ -93,6 +93,8 @@ def prefix(dictionary):
     dictionary: Dict
         Dictionary object to filter
     """
+    if uuid:
+        dictionary["id"] = str(uuid)
 
     return {
         **dictionary,

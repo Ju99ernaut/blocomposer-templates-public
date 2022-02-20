@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, Query, status
-from models import Template, User, Message, Count
+from models import Template, TemplateId, User, Message, Count
 from utils.tasks import prefix, add_author
 from dependencies import get_user
 
@@ -15,14 +15,15 @@ router = APIRouter(
 )
 
 
-@router.get("", response_model=List[Template])
+@router.get("", response_model=List[TemplateId])
 async def read_user_templates(
     user: User = Depends(get_user),
     page: Optional[int] = Query(0, minimum=0, description="Page number"),
     size: Optional[int] = Query(50, maximum=100, description="Page size"),
 ):
     return [
-        prefix(template) for template in data.get_all_templates(user["id"], page, size)
+        prefix(template, template["uuid"])
+        for template in data.get_all_templates(user["id"], page, size)
     ]
 
 
@@ -55,12 +56,12 @@ async def read_count(user: User = Depends(get_user)):
     return {"count": data.get_user_templates_count(user["id"])}
 
 
-@router.get("/{uuid}", response_model=Template)
+@router.get("/{uuid}", response_model=TemplateId)
 async def read_template_with_id(uuid: UUID):
     template = data.get_template(uuid)
     if not template:
         raise HTTPException(status_code=404, detail="Template not found")
-    return prefix(template)
+    return prefix(template, uuid)
 
 
 @router.get("/expand/{uuid}", response_model=Template)
@@ -83,14 +84,15 @@ async def read_templates_by_category(
     ]
 
 
-@router.post("/{uuid}", response_model=Template)
+@router.post("/{uuid}", response_model=TemplateId)
 async def add_template(uuid: UUID, template: Template, user: User = Depends(get_user)):
     count = data.get_user_templates_count(user["id"])
     template_db = data.get_template(uuid)
     if count < 4 or template_db:
+        template.uuid = uuid
         template.author = user["id"]
         data.add_template(template.dict())
-    return prefix(template.dict())
+    return prefix(template.dict(), uuid)
 
 
 @router.delete("/{uuid}", response_model=Message)

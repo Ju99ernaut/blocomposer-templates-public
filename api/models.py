@@ -41,6 +41,10 @@ class Template(BaseModel):
     updated_at: Optional[Union[datetime, str]] = Field(default_factory=datetime.now)
 
 
+class TemplateId(Template):
+    id: Optional[Union[str, int]] = None
+
+
 class Asset(BaseModel):
     uid: str
     author: Optional[Union[Author, str]] = None
