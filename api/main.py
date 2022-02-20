@@ -18,17 +18,18 @@ app = FastAPI(
     openapi_tags=API_TAGS_METADATA,
 )
 
-if os.getenv("WHITELIST_ORIGINS"):
-    allow_origins = os.getenv("WHITELIST_ORIGINS").split(",")
-else:
-    allow_origins = [
-        "http://localhost:3000/",
-        "http://localhost:3000",
-    ]
+## if os.getenv("WHITELIST_ORIGINS"):
+##     allow_origins = os.getenv("WHITELIST_ORIGINS").split(",")
+## else:
+##     allow_origins = [
+##         "http://localhost:3000/",
+##         "http://localhost:3000",
+##     ]
+
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=allow_origins,
+    allow_origins=["https://blocomposer.com"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
