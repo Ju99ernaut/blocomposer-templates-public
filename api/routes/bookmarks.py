@@ -66,7 +66,7 @@ async def read_template_count(uuid: UUID):
 async def add_bookmark(bookmark: Bookmark, user: User = Depends(get_user)):
     bookmark.author = user["id"]
     data.add_bookmark(bookmark.dict())
-    bookmark = data.get_bookmark(bookmark.id, user["id"])
+    bookmark = data.get_bookmark(bookmark.uuid, user["id"])
     if not bookmark:
         raise HTTPException(status_code=404, detail="Bookmark not found")
     return bookmark
@@ -76,7 +76,7 @@ async def add_bookmark(bookmark: Bookmark, user: User = Depends(get_user)):
 async def update_bookmarks(
     uuid: UUID, bookmark: Bookmark, user: User = Depends(get_user)
 ):
-    bookmark.id = uuid
+    bookmark.uuid = uuid
     data.update_bookmark(bookmark.dict())
     bookmark = data.get_bookmark(uuid, user["id"])
     if not bookmark:

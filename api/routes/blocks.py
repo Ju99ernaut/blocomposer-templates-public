@@ -42,7 +42,7 @@ async def add_block(block: Block, user: User = Depends(get_user)):
     if count < 10:
         block.author = user["id"]
         data.add_block(block.dict())
-    block = data.get_block(block.id, user["id"])
+    block = data.get_block(block.uuid, user["id"])
     if not block:
         raise HTTPException(status_code=404, detail="Block not found")
     return block
@@ -50,7 +50,7 @@ async def add_block(block: Block, user: User = Depends(get_user)):
 
 @router.patch("/{uuid}", response_model=Block)
 async def update_block(uuid: UUID, block: Block, user: User = Depends(get_user)):
-    block.id = uuid
+    block.uuid = uuid
     data.update_block(block.dict())
     block = data.get_block(uuid, user["id"])
     if not block:

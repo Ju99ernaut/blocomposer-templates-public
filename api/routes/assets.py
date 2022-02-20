@@ -40,9 +40,9 @@ async def read_count(user: User = Depends(get_user)):
     return {"count": data.get_user_assets_count(user["id"])}
 
 
-@router.get("/{id}", response_model=Asset)
-async def read_asset(id: str, user: User = Depends(get_user)):
-    asset = data.get_asset(id, user["id"])
+@router.get("/{uid}", response_model=Asset)
+async def read_asset(uid: str, user: User = Depends(get_user)):
+    asset = data.get_asset(uid, user["id"])
     if not asset:
         raise HTTPException(status_code=404, detail="Item not found")
     return asset
@@ -60,7 +60,7 @@ async def add_asset(asset: Asset, user: User = Depends(get_user)):
     return asset_db
 
 
-@router.patch("/{id}", response_model=Asset)
+@router.patch("/{uid}", response_model=Asset)
 async def update_asset(id: str, asset: Asset, user: User = Depends(get_user)):
     asset.id = id
     data.update_asset(asset.dict())
@@ -70,9 +70,9 @@ async def update_asset(id: str, asset: Asset, user: User = Depends(get_user)):
     return asset_db
 
 
-@router.delete("/{id}", response_model=Message)
-async def delete_asset(id: str, user: User = Depends(get_user)):
-    url = os.getenv("TUS_ENDPOINT") + id
+@router.delete("/{uid}", response_model=Message)
+async def delete_asset(uid: str, user: User = Depends(get_user)):
+    url = os.getenv("TUS_ENDPOINT") + uid
     result = requests.delete(url, headers={"Tus-Resumable": "1.0.0"})
     code = result.status_code
     if not (code == 204 or code == 404 or code == 410):
@@ -81,8 +81,8 @@ async def delete_asset(id: str, user: User = Depends(get_user)):
             detail="Failed to delete file",
         )
     else:
-        data.remove_asset(id, user["id"])
-        if data.get_asset(id, user["id"]):
+        data.remove_asset(uid, user["id"])
+        if data.get_asset(uid, user["id"]):
             raise HTTPException(
                 status_code=status.HTTP_417_EXPECTATION_FAILED,
                 detail="Failed to delete reference",
